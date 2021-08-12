@@ -4,8 +4,8 @@
   programs.home-manager.enable = true;
 
   # Some information Home Manager needs
-  # home.username = "toxic";
-  # home.homeDirectory = "/home/toxic";
+  home.username = "toxic";
+  home.homeDirectory = "/home/toxic";
 
   programs = {
 
