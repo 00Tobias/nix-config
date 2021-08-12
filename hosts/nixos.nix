@@ -40,6 +40,7 @@
 
   hardware = {
     pulseaudio.enable = false;
+    steam-hardware.enable = true;
   };
 
   # Set your time zone.
@@ -67,7 +68,7 @@
 
   users.users.toxic = {
     isNormalUser = true;
-    shell = /home/toxic/.nix-profile/bin/zsh;
+    shell = pkgs.zsh;
       extraGroups = [ "wheel" ];
   };
 
@@ -106,13 +107,13 @@
   # Allow programs with unfree licenses on the system, regrettably.
   nixpkgs.config.allowUnfree = true;
 
+  # Enable Steam for this machine
+  programs.steam.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     home-manager
-    kakoune
-    alacritty
-    xclip
     nixpkgs-fmt
   ];
 

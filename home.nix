@@ -3,9 +3,17 @@
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
-  # Some information Home Manager needs
-  home.username = "toxic";
-  home.homeDirectory = "/home/toxic";
+  home = {
+    # Some information Home Manager needs
+    username = "toxic";
+    homeDirectory = "/home/toxic";
+    sessionVariables = {
+      MOZ_ENABLE_WAYLAND = 1;
+    };
+    packages = [
+      pkgs.discord-canary
+    ];
+  };
 
   programs = {
 
@@ -42,8 +50,20 @@
     fzf.enable = true;
     jq.enable = true;
 
+    kakoune = {
+      enable = true;
+    };
+
     firefox = {
       enable = true;
+      package = pkgs.firefox-devedition-bin;
+      profiles = {
+        myprofile = {
+          settings = {
+            "gfx.webrender.all" = true;
+          };
+        };
+      };
     };
   };
 
