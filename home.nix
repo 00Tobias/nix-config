@@ -4,8 +4,8 @@
   programs.home-manager.enable = true;
 
   # Some information Home Manager needs
-  home.username = "toxic";
-  home.homeDirectory = "/home/toxic";
+  # home.username = "toxic";
+  # home.homeDirectory = "/home/toxic";
 
   programs = {
 
@@ -55,5 +55,5 @@
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
   # changes in each release.
-  home.stateVersion = "21.05";
+  home.stateVersion = "21.11";
 }

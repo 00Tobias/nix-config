@@ -6,12 +6,19 @@
     home-manager.url = "github:nix-community/home-manager";
   };
 
-  outputs = { home-manager, nixpkgs, ... }: {
+  outputs = { self, home-manager, nixpkgs, ... }@inputs: {
+    homeConfigurations = {
+      nixosHomeConfig = inputs.home-manager.lib.homeManagerConfiguration {
+        homeDirectory = "/home/toxic/";
+        username = "toxic";
+      };
+    };
+
     nixosConfigurations = {
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          # ./configuration.nix
+          ./configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -21,5 +28,6 @@
         ];
       };
     };
+    nixosHomeConfig = self.homeConfigurations.nixosHomeConfig.activationPackage;
   };
 }
