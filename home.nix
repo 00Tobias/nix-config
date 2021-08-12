@@ -1,21 +1,5 @@
-{ config, pkgs, ... }:
-let
-  nur-no-pkgs = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {};
-in
-{
-  imports = lib.attrValues nur-no-pkgs.repos.moredhel.hmModules.modules;
+{ config, pkgs, ... }: {
 
-  services.unison = {
-    enable = true;
-    profiles = {
-      org = {
-        src = "/home/moredhel/org";
-        dest = "/home/moredhel/org.backup";
-        extraArgs = "-batch -watch -ui text -repeat 60 -fat";
-      };
-    };
-  };
-  
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
