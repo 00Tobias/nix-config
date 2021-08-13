@@ -12,7 +12,18 @@
     };
     packages = [
       pkgs.discord-canary
+      pkgs.fd
+      pkgs.electron
+      pkgs.bfetch
+      pkgs.wlroots-eglstreams
+      # pkgs.river
     ];
+  };
+
+  wayland = {
+    windowManager.sway = {
+      enable = true;
+    };
   };
 
   programs = {
@@ -50,20 +61,34 @@
     fzf.enable = true;
     jq.enable = true;
 
+    gpg.enable = true;
+    password-store = {
+      enable = true;
+      # # settings = { };
+    };
+
     kakoune = {
       enable = true;
     };
 
     firefox = {
       enable = true;
-      package = pkgs.firefox-devedition-bin;
+      package = pkgs.firefox-wayland;
       profiles = {
-        myprofile = {
+        toxic = {
+          name = "toxic";
+          id = 0;
+          isDefault = true;
           settings = {
             "gfx.webrender.all" = true;
           };
         };
       };
+    };
+
+    browserpass = {
+      enable = true;
+      browsers = [ "firefox" ];
     };
   };
 

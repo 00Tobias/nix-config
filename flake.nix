@@ -3,7 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-wayland.url = "github:colemickens/nixpkgs-wayland";
+    nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
+    nix-desktop.url = "github:akirak/nix-desktop";
   };
 
   outputs = { self, home-manager, nixpkgs, ... }@inputs: {
@@ -25,6 +28,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = import ./home.nix;
           }
+          { nixpkgs.overlays = [ inputs.nur.overlay inputs.nixpkgs-wayland.overlay ]; }
         ];
       };
     };

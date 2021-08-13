@@ -24,7 +24,7 @@
   # Add my Bulk hard drive
   # TODO: Move this into hardware-configuration or something
   # TODO: Replace this with a ZFS pool
-  fileSystems."/bulk" =
+  fileSystems."/media/bulk" =
     {
       device = "/dev/disk/by-uuid/f762410f-9fb0-47b5-adfa-f83c08081916";
       fsType = "ext4";
@@ -69,7 +69,7 @@
   users.users.toxic = {
     isNormalUser = true;
     shell = pkgs.zsh;
-      extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" ];
   };
 
   services = {
