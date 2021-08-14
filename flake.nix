@@ -6,7 +6,6 @@
     nixpkgs-wayland.url = "github:colemickens/nixpkgs-wayland";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
-    nix-desktop.url = "github:akirak/nix-desktop";
   };
 
   outputs = { self, home-manager, nixpkgs, ... }@inputs: {

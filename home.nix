@@ -13,8 +13,11 @@
     packages = [
       pkgs.discord-canary
       pkgs.fd
+      pkgs.yubikey-manager
+      pkgs.yubikey-manager-qt
+      pkgs.yubikey-personalization
       pkgs.electron
-      pkgs.bfetch
+      pkgs.pfetch
       pkgs.wlroots-eglstreams
       # pkgs.river
     ];
@@ -61,10 +64,19 @@
     fzf.enable = true;
     jq.enable = true;
 
+    htop = {
+      enable = true;
+      settings = {
+        vim_mode = true;
+      };
+    };
+
     gpg.enable = true;
     password-store = {
       enable = true;
-      # # settings = { };
+      settings = {
+        PASSWORD_STORE_CLIP_TIME = "60";
+      };
     };
 
     kakoune = {
@@ -73,7 +85,16 @@
 
     firefox = {
       enable = true;
-      package = pkgs.firefox-wayland;
+      # package = pkgs.firefox-wayland;
+      package = pkgs.firefox.override {
+        cfg = {
+          # Gnome shell native connector
+          enableGnomeExtensions = true;
+          # Tridactyl native connector
+          enableTridactylNative = true;
+        };
+      };
+
       profiles = {
         toxic = {
           name = "toxic";
@@ -83,12 +104,40 @@
             "gfx.webrender.all" = true;
           };
         };
+        spotify = {
+          name = "spotify";
+          id = 1;
+          isDefault = false;
+          settings = {
+            "gfx.webrender.all" = true;
+          };
+        };
       };
+      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+        browserpass
+        clearurls
+        sidebery
+        sponsorblock
+        tabliss
+        tridactyl
+        ublock-origin
+      ];
     };
 
     browserpass = {
       enable = true;
       browsers = [ "firefox" ];
+    };
+  };
+
+  xdg.desktopEntries = {
+    discord-canary = {
+      name = "Discord Canary";
+      icon = "discord-canary";
+      exec = "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /nix/store/0vx4mdibhyg6p4hxwb3c03pjxb00fn0p-discord-canary-0.0.126/opt/DiscordCanary/resources/app.asar";
+      terminal = false;
+      categories = [ "Network" "InstantMessaging" ];
+      type = "Application";
     };
   };
 

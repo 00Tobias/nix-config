@@ -40,6 +40,7 @@
 
   hardware = {
     pulseaudio.enable = false;
+    opengl.enable = true;
     steam-hardware.enable = true;
   };
 
@@ -73,6 +74,7 @@
   };
 
   services = {
+    udev.packages = [ pkgs.yubikey-personalization ];
     xserver = {
       enable = true;
       layout = "se";
@@ -110,11 +112,34 @@
   # Enable Steam for this machine
   programs.steam.enable = true;
 
+  # GPG / Yubikey
+  # TODO: Modularize this and other Yubikey stuff
+  environment.shellInit = ''
+    export GPG_TTY="$(tty)"
+    gpg-connect-agent /bye
+    export SSH_AUTH_SOCK="/run/user/$UID/gnupg/S.gpg-agent.ssh"
+  '';
+
+  programs = {
+    ssh.startAgent = false;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+      pinentryFlavor = "gnome3";
+    };
+  };
+
+  # security.pam.yubico = {
+  #   enable = true;
+  #   mode = "challenge-response";
+  # };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     home-manager
     nixpkgs-fmt
+    gnome.gnome-tweaks
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
