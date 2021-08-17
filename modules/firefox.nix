@@ -13,6 +13,26 @@
         sha256 = "sha256-eGi0gkeqO2oVdwFU4cx7edYTq5Bo3YdnUjxutcO6HKM=";
       });
     };
+
+    file."${config.home.homeDirectory}/.tridactylrc".text = ''
+      " Set a dark colorscheme
+      colors dark
+
+      " Swap tab switching to make it make more sense with Vertical tabs
+      bind J tabnext
+      bind K tabprev
+
+      " More Kakoune-like binds
+      bind gk scrollto 0
+      bind gj scrollto 100
+
+      " Don't show the mode indicator on certain sites
+      seturl youtube.com modeindicator false
+
+      " Don't show the mode indicator in fullscreen
+      autocmd FullscreenEnter .* set modeindicator false
+      autocmd FullscreenLeft .* set modeindicator true
+    '';
   };
 
   programs = {
