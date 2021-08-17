@@ -1,6 +1,9 @@
 { config, pkgs, ... }: {
 
-  imports = [ ./modules/kakoune.nix ];
+  imports = [
+    ./modules/kakoune.nix
+    ./modules/firefox.nix
+  ];
 
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
@@ -9,12 +12,11 @@
     # Some information Home Manager needs
     username = "toxic";
     homeDirectory = "/home/toxic";
-    sessionVariables = {
-      MOZ_ENABLE_WAYLAND = 1;
-    };
     packages = with pkgs; [
       discord-canary
       fd
+      xsel
+      zig
       yubikey-manager
       yubikey-manager-qt
       yubikey-personalization
@@ -79,52 +81,6 @@
       settings = {
         PASSWORD_STORE_CLIP_TIME = "60";
       };
-    };
-
-    firefox = {
-      enable = true;
-      # package = pkgs.firefox-wayland;
-      package = pkgs.firefox.override {
-        cfg = {
-          # Gnome shell native connector
-          enableGnomeExtensions = true;
-          # Tridactyl native connector
-          enableTridactylNative = true;
-        };
-      };
-
-      profiles = {
-        toxic = {
-          name = "toxic";
-          id = 0;
-          isDefault = true;
-          settings = {
-            "gfx.webrender.all" = true;
-          };
-        };
-        spotify = {
-          name = "spotify";
-          id = 1;
-          isDefault = false;
-          settings = {
-            "gfx.webrender.all" = true;
-          };
-        };
-      };
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-        browserpass
-        clearurls
-        sidebery
-        sponsorblock
-        tabliss
-        tridactyl
-        ublock-origin
-      ];
-    };
-
-    browserpass = {
-      enable = true;
-      browsers = [ "firefox" ];
     };
   };
 
