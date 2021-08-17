@@ -1,5 +1,7 @@
 { config, pkgs, ... }: {
 
+  imports = [ ./modules/kakoune.nix ];
+
   # Let Home Manager install and manage itself
   programs.home-manager.enable = true;
 
@@ -79,10 +81,6 @@
       };
     };
 
-    kakoune = {
-      enable = true;
-    };
-
     firefox = {
       enable = true;
       # package = pkgs.firefox-wayland;
@@ -134,7 +132,7 @@
     discord-canary = {
       name = "Discord Canary";
       icon = "discord-canary";
-      exec = "electron --enable-features=UseOzonePlatform --ozone-platform=wayland /nix/store/0vx4mdibhyg6p4hxwb3c03pjxb00fn0p-discord-canary-0.0.126/opt/DiscordCanary/resources/app.asar";
+      exec = "electron --enable-features=UseOzonePlatform --ozone-platform=wayland ${pkgs.discord-canary}/opt/DiscordCanary/resources/app.asar";
       terminal = false;
       categories = [ "Network" "InstantMessaging" ];
       type = "Application";

@@ -48,9 +48,9 @@
   time.timeZone = "Europe/Stockholm";
 
   networking = {
-    useDHCP = false;
     interfaces.enp7s0.useDHCP = true;
     interfaces.wlp6s0.useDHCP = true;
+    resolvconf.useLocalResolver = true; # Use NextDNS resolver. TODO: Modularize this
     hostName = "nixos";
     hostId = "7cd2d852"; # Required by ZFS
     firewall = {
@@ -70,7 +70,7 @@
   users.users.toxic = {
     isNormalUser = true;
     shell = pkgs.zsh;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "kvm" ];
   };
 
   services = {
@@ -103,6 +103,13 @@
     nextdns = {
       enable = true;
       arguments = [ "-config" "1dc65b" "-report-client-info" ];
+    };
+  };
+
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      qemuOvmf = true;
     };
   };
 
@@ -139,6 +146,7 @@
   environment.systemPackages = with pkgs; [
     home-manager
     nixpkgs-fmt
+    qemu virt-manager # Qemu TODO: Modularize this
     gnome.gnome-tweaks
   ];
 
