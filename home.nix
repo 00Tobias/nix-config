@@ -3,6 +3,7 @@
   imports = [
     ./modules/kakoune.nix
     ./modules/firefox.nix
+    ./modules/term.nix
   ];
 
   # Let Home Manager install and manage itself
@@ -14,14 +15,10 @@
     homeDirectory = "/home/toxic";
     packages = with pkgs; [
       discord-canary
-      fd
-      xsel
-      zig
       yubikey-manager
       yubikey-manager-qt
       yubikey-personalization
       electron
-      pfetch
       wlroots-eglstreams
       # river
     ];
@@ -34,47 +31,6 @@
   };
 
   programs = {
-
-    zsh = {
-      enable = true;
-      enableAutosuggestions = true;
-      enableCompletion = true;
-      enableSyntaxHighlighting = true;
-      enableVteIntegration = true;
-    };
-
-    git = {
-      enable = true;
-      userName = "ToxicSalt";
-      userEmail = "tobiasts@protonmail.com";
-    };
-
-    starship = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    zoxide = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
-    exa = {
-      enable = true;
-      enableAliases = true;
-    };
-
-    bat.enable = true;
-    fzf.enable = true;
-    jq.enable = true;
-
-    htop = {
-      enable = true;
-      settings = {
-        vim_mode = true;
-      };
-    };
-
     gpg.enable = true;
     password-store = {
       enable = true;
