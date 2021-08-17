@@ -1,7 +1,18 @@
 { config, pkgs, ... }: {
 
-  home.sessionVariables = {
-    MOZ_ENABLE_WAYLAND = 1;
+  home = {
+    sessionVariables = {
+      MOZ_ENABLE_WAYLAND = 1;
+    };
+    file."${config.home.homeDirectory}/.mozilla/firefox/toxic/chrome/lepton" = {
+      recursive = true;
+      source = (pkgs.fetchFromGitHub {
+        owner = "black7375";
+        repo = "Firefox-Ui-Fix";
+        rev = "319c39dbd07da2ed763a44928803b3f66ffe018c";
+        sha256 = "sha256-eGi0gkeqO2oVdwFU4cx7edYTq5Bo3YdnUjxutcO6HKM=";
+      });
+    };
   };
 
   programs = {
@@ -23,8 +34,44 @@
           id = 0;
           isDefault = true;
           settings = {
-            "gfx.webrender.all" = true;
+            "gfx.webrender.all" = true; # Enable Webrender
+            "fission.autostart" = true; # Enable Fission
+            "extensions.pocket.enabled" = false; # Disable Pocket
+            "identity.fxaccounts.enabled" = false; # Disable Firefox account
+            "ui.context_menus.after_mouseup" = true; # Fix behaviour with tiling window managers
+            "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enable userChrome.css
+            # Lepton stuff
+            "svg.context-properties.content.enabled" = true;
+            "layout.css.backdrop-filter.enabled" = true;
+            "browser.compactmode.show" = true;
+            "browser.urlbar.suggest.calculator" = true;
           };
+          extraConfig = builtins.readFile (builtins.fetchurl {
+            url = "https://raw.githubusercontent.com/yokoffing/Better-Fox/master/user.js";
+            sha256 = "sha256:1452756d84915f25dd7df9546f9801152ec950f30536717e7f9b377b634828b2";
+          });
+          userChrome = ''
+            @import "lepton/userChrome.css";
+            
+            #TabsToolbar {
+              display: none;
+            }
+
+            /* Vertical tabs with Sidebery */
+
+            /* Sidebar min and max width removal */
+            #sidebar {
+                max-width: none !important;
+                min-width: 0px !important;
+            }
+
+            #sidebar-header {
+              display: none;
+            }
+          '';
+          userContent = ''
+            @import "lepton/userContent.css";
+          '';
         };
         spotify = {
           name = "spotify";
