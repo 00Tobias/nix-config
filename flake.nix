@@ -21,6 +21,7 @@
         system = "x86_64-linux";
         modules = [
           ./hosts/nixos.nix
+          ./modules/doas.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
