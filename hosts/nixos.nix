@@ -146,6 +146,7 @@
   environment.systemPackages = with pkgs; [
     home-manager
     nixpkgs-fmt
+    nix-prefetch
     qemu virt-manager # Qemu TODO: Modularize this
     gnome.gnome-tweaks
   ];
