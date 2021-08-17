@@ -12,16 +12,16 @@
     sessionVariables = {
       MOZ_ENABLE_WAYLAND = 1;
     };
-    packages = [
-      pkgs.discord-canary
-      pkgs.fd
-      pkgs.yubikey-manager
-      pkgs.yubikey-manager-qt
-      pkgs.yubikey-personalization
-      pkgs.electron
-      pkgs.pfetch
-      pkgs.wlroots-eglstreams
-      # pkgs.river
+    packages = with pkgs; [
+      discord-canary
+      fd
+      yubikey-manager
+      yubikey-manager-qt
+      yubikey-personalization
+      electron
+      pfetch
+      wlroots-eglstreams
+      # river
     ];
   };
 
