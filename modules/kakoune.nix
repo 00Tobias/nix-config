@@ -53,6 +53,11 @@
           }
           {
             name = "WinSetOption";
+            option = "filetype=nix";
+            commands = "set-option window indentwidth 2";
+          }
+          {
+            name = "WinSetOption";
             option = "filetype=(clojure|lisp|scheme|racket)";
             commands = "parinfer-enable-window -smart";
           }
