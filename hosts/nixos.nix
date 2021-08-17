@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, ... }:
 
 {
   imports =
@@ -50,14 +50,8 @@
   networking = {
     interfaces.enp7s0.useDHCP = true;
     interfaces.wlp6s0.useDHCP = true;
-    resolvconf.useLocalResolver = true; # Use NextDNS resolver. TODO: Modularize this
     hostName = "nixos";
     hostId = "7cd2d852"; # Required by ZFS
-    firewall = {
-      # For KDEConnect
-      allowedUDPPortRanges = [{ from = 1714; to = 1764; }];
-      allowedTCPPortRanges = [{ from = 1714; to = 1764; }];
-    };
   };
 
   # Select internationalisation properties.
@@ -98,11 +92,6 @@
       alsa.support32Bit = true;
       pulse.enable = true;
       jack.enable = true;
-    };
-
-    nextdns = {
-      enable = true;
-      arguments = [ "-config" "1dc65b" "-report-client-info" ];
     };
   };
 
