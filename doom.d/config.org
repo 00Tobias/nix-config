@@ -1,0 +1,642 @@
+#+TITLE:  Literate config for my editor
+#+AUTHOR: Tobias Carlsson
+#+STARTUP: overview
+
+* Introduction
+  This is my WIP literate config for the Doom Emacs framework...
+
+  - Doom Emacs ::
+    I have jumped editors more times than I can count, and every time I jumped back
+    to Emacs to give it another shot, I rolled my own config out of curiosity and stubbornness.
+    While this resulted in me learning a whole lot about my now favorite OS, for example
+    how much of an absolute pain it can be to configure from scratch, it took hours of my life away.
+    Since the config I had built up previously was heavily Doom inspired (with my own personal
+    chaotic flair to it), I decided to put in less effort and just use the damned framework.
+
+  - Bleeding edge ::
+    I use the master build of Emacs, staying mostly in sync with the Git repository.
+    I also use the recently merged native-comp feature, because *speed*.
+
+  - Thank you ::
+    Without the absolutely lovely and dedicated Emacs community and their seemingly
+    arcane elisp knowledge I would probably still be on Vim/Neovim right now, so
+    a huge thanks to all the people who's code I've yoinked snippets from all
+    over the internet.
+     - https://github.com/lucasgruss/.doom.d has been a huge boon +-mode+ for both my
+       literate config, my doom config, and my EXWM config.
+
+* System tools
+** Nix
+The Emacs way of installing packages through a declarative config file has
+been incredibly benificial to me, and after switching from Debian Sid
+I decided to introduce the paradigm to my entire system with NixOS.
+I also use Emacs to manage the whole thing!
+NOTE: I installed Gentoo again, oops.
+  #+begin_src emacs-lisp :tangle config.el
+;; (use-package! nix-mode
+;;   :mode "\\.nix\\'")
+  #+end_src
+
+** EMMS
+
+*** TODO
+
+* Window management
+** Windmove
+    Windmove improves the default Emacs way of switching between opened
+    buffers. I also cannot live without it in my EXWM config, as switching
+    windows is something I do a lot, naturally.
+   #+begin_src emacs-lisp :tangle config.el
+(use-package! windower
+  :init
+  (setq windower-border-move-distance 1))
+   #+end_src
+
+** EXWM
+The biggest part of my config, this is where I center my entire
+desktop environment around Emacs.
+
+*** Import EXWM file
+    All of the EXWM config is tangled into a seperate .el file
+    so that I can easily toggle it off in my config.
+    #+begin_src emacs-lisp :tangle config.el
+;; (load "~/.doom.d/exwm.el")
+    #+end_src
+*** Config
+    The following snippet should go into the file
+    =/usr/share/xsessions/emacs.desktop= to make EXWM a possible choice in the
+    display manager.
+    #+begin_src conf :tangle no
+[Desktop Entry]
+Name=EXWM
+Comment="Isn't this a bit excessive?"
+Exec=emacs
+Type=application
+    #+end_src
+
+    Meanwhile the following snippet is for xinit, which is what I prefer as
+    it gives me some nice control of what gets launched, and I don't need to do
+    it through my Emacs config.
+    This code should go in =$HOME/.xinitrc= and gets executed by startx (TODO:̇ highlight startx how?)
+    #+begin_src conf :tangle no
+# Set fallback cursor.
+xsetroot -cursor_name left_ptr
+
+# Start my window compositor, doesn't do much in terms of effects
+# but it helps with window tearing and shaped windows.
+picom --experimental-backends &
+
+# Launch my notification daemon so shitty electron apps like Discord
+# don't literally hang on any message.
+# An Emacs alternative to this would be eosd, which I wanna try at some point
+dunst &
+
+# Run "flameshot", my screenshotting application in the background.
+flameshot &
+
+# Launch Emacs with dbus.
+exec dbus-launch --exit-with-session emacs
+    #+end_src
+
+*** EXWM-randr
+    Enable EXWM's xrandr support for my multi-monitor setup,
+    with a conditional check so I can run the same setup on my OpenBSD laptop.
+    #+begin_src emacs-lisp :tangle exwm.el
+(if (eq system-type 'gnu/linux)
+    (use-package! exwm-randr))
+    #+end_src
+
+*** EXWM
+    This is where it gets real, and it is also the biggest deviation from the
+    default Doom Emacs in my config.
+    #+begin_src emacs-lisp :tangle exwm.el
+(use-package! exwm
+  :after (exwm-randr exwm-systemtray)
+  ;; :if window-system
+  ;; :init
+  ;; (map!
+  ;;  :map exwm-mode-map
+  ;;  :localleader
+  ;;  :desc "Toggle mode-line"       "m" #'exwm-layout-toggle-mode-line
+  ;;  :leader
+  ;;  (:prefix ("e" . "EXWM")
+  ;;   :desc "Attach minibuffer"      "a" #'exwm-workspace-attach-minibuffer
+  ;;   :desc "Detach minibuffer"      "d" #'exwm-workspace-detach-minibuffer
+  ;;   :desc "Fullscreen"             "f" #'exwm-layout-set-fullscreen
+  ;;   :desc "Floating hide"          "h" #'exwm-layout-set-fullscreen
+  ;;   :desc "Release keyboard"       "k" #'exwm-input-release-keyboard
+  ;;   :desc "Send next key"          "q" #'exwm-input-send-next-key
+  ;;   :desc "Reset"                  "r" #'exwm-reset
+  ;;   :desc "Toggle floating layout" "t" #'exwm-floating-toggle-floating
+  ;;   :desc "Workspace move window"  "w" #'exwm-workspace-move-window))
+  :config
+  (defun lg/exwm-async-run (name)
+    "Run a process asynchronously"
+    (interactive)
+    (start-process name nil name))
+
+  (defun lg/run-or-raise-or-dismiss (program program-buffer-name)
+    "If no instance of the program is running, launch the program.
+If an instance already exists, and its corresponding buffer is
+displayed on the screen, move to the buffer. If the buffer is not
+visible, switch to the buffer in the current window. Finally, if
+the current buffer is already that of the program, bury the
+buffer (=minimizing in other WM/DE)"
+    ;; check current buffer
+    (if (string= (buffer-name) program-buffer-name)
+        (bury-buffer)
+      ;; either switch to or launch program
+      (progn
+        (if (get-buffer program-buffer-name)
+            (progn
+              (if (get-buffer-window program-buffer-name)
+                  (select-window (display-buffer program-buffer-name) nil)
+                (exwm-workspace-switch-to-buffer program-buffer-name)))
+          ;; start program
+          (progn
+            (lg/exwm-async-run program)
+            (message (format "Launching %s" program)))))))
+
+  (defun lg/toggle-line-char-modes ()
+    "If on a EXWM buffer, toggle 'line' or 'char'"
+    (interactive)
+    (if exwm-window-type
+        (if (string= exwm--input-mode "line-mode")
+            (call-interactively #'exwm-input-release-keyboard) ; switch to char mode
+          (call-interactively #'exwm-input-grab-keyboard)))) ; switch to line mode
+
+  (defun lg/lock-screen ()
+    "Lock screen with slock"
+    (interactive)
+    (start-process "" nil "/usr/local/bin/slock"))
+
+  (defun efs/run-in-background (command)
+    (let ((command-parts (split-string command "[ ]+")))
+      (apply #'call-process `(,(car command-parts) nil 0 nil ,@(cdr command-parts)))))
+
+  (defun lg/exwm-update-title-hook ()
+    "Hook to be ran when window title is updated"
+    (if (not (string= exwm-class-name "Firefox-esr"))
+        (exwm-workspace-rename-buffer exwm-class-name)
+      (exwm-workspace-rename-buffer exwm-title)))
+
+  (add-hook 'exwm-update-title-hook #'lg/exwm-update-title-hook)
+
+  ;; disable tab bar for floating frames
+  (add-hook 'exwm-floating-setup-hook
+            (lambda ()
+              (toggle-tab-bar-mode-from-frame -1)))
+
+  (setq exwm-input-global-keys
+        `(([S-s-backspace] . exwm-workspace-delete)
+          ([?\s-f] . exwm-layout-toggle-fullscreen)
+          ([?\s-F] . exwm-floating-toggle-floating)
+          ([?\s-R] . exwm-reset)
+          ([?\s-w] . exwm-utils-workspace-switch-cyclically)
+          ([?\s-W] . exwm-utils-workspace-move-cyclically)
+          ([?\s-\'] . consult-buffer)
+          ([?\s-\@] . ibuffer)
+          ([?\s-b] . bury-buffer)
+          ([s-f2]  . lg/lock-screen)
+          ([?\s-d] . app-launcher-run-app)
+          ([?\s-u] . lg/toggle-line-char-modes)
+          ([s-return] . +vterm/toggle)
+          ([s-escape] . lg/kill-this-buffer)
+          ([?\s-/]  . centaur-tabs-mode)
+          ([?\s-m]  . centaur-tabs-backward)
+          ([?\s-,]  . centaur-tabs-forward)
+          ([?\s-?]  . tab-bar-mode)
+          ([?\s-M]  . lg/tab-previous-and-hide-maybe)
+          ([?\s-<]  . lg/tab-next-and-hide-maybe)
+          ;; Everything window related
+          ([?\s-q] . evil-window-delete)
+          ([?\s-y] . evil-window-vsplit)
+          ([?\s-u] . split-window-vertically)
+          ([?\s-i] . evil-window-split)
+          ([?\s-o] . split-window-horizontally)
+          ([s-tab]  . windower-switch-to-last-buffer)
+          ([?\s-r]  . windower-switch-to-last-buffer)
+          ([?\s-\\] . windower-toggle-split)
+          ([?\s-O]  . windower-toggle-single)
+          ([s-C-h] . windower-move-border-left)
+          ([s-C-j] . windower-move-border-below)
+          ([s-C-k] . windower-move-border-above)
+          ([s-C-l] . windower-move-border-right)
+          ([?\s-h] . windmove-left)  ([?\s-H] . windower-swap-left)
+          ([?\s-j] . windmove-down)  ([?\s-J] . windower-swap-below)
+          ([?\s-k] . windmove-up)    ([?\s-K] . windower-swap-above)
+          ([?\s-l] . windmove-right) ([?\s-L] . windower-swap-right)))
+  (setq exwm-workspace-show-all-buffers t)
+  (setq exwm-layout-show-all-buffers t)
+  (setq exwm-workspace-number 2)
+  ;; (setq exwm-workspace-minibuffer-position nil)
+  (setq exwm-workspace-display-echo-area-timeout 1)
+
+  ;; Display the time on my modeline
+  (setq display-time-24hr-format 1) ;; Because we're civilized people.
+  (setq display-time-format " %H:%M - %Y/%m/%d ")
+  (display-time-mode 1)
+
+  (push (aref (kbd "<escape>") 0) exwm-input-prefix-keys)
+  (push (aref (kbd "<return>") 0) exwm-input-prefix-keys)
+
+  (exwm-enable))
+    #+end_src
+
+*** Tab-line/Centaur-tabs fix
+    I stole this from https://github.com/lucasgruss/.doom.d, this redefines
+    =exwm-layout--show= in order to fix EXWM's non-existent cooperation with Centaur-tabs.
+    #+begin_src emacs-lisp :tangle exwm.el
+(after! exwm
+  (defun exwm-layout--show (id &optional window)
+    "Show window ID exactly fit in the Emacs window WINDOW."
+    (exwm--log "Show #x%x in %s" id window)
+    (let* ((edges (window-inside-absolute-pixel-edges window))
+           (x (pop edges))
+           (y (pop edges))
+           (width (- (pop edges) x))
+           (height (- (pop edges) y))
+           frame-x frame-y frame-width frame-height)
+      (with-current-buffer (exwm--id->buffer id)
+        (when exwm--floating-frame
+          (setq frame-width (frame-pixel-width exwm--floating-frame)
+                frame-height (+ (frame-pixel-height exwm--floating-frame)
+                                ;; Use `frame-outer-height' in the future.
+                                exwm-workspace--frame-y-offset))
+          (when exwm--floating-frame-position
+            (setq frame-x (elt exwm--floating-frame-position 0)
+                  frame-y (elt exwm--floating-frame-position 1)
+                  x (+ x frame-x (- exwm-layout--floating-hidden-position))
+                  y (+ y frame-y (- exwm-layout--floating-hidden-position)))
+            (setq exwm--floating-frame-position nil))
+          (exwm--set-geometry (frame-parameter exwm--floating-frame
+                                               'exwm-container)
+                              frame-x frame-y frame-width frame-height))
+        (when (exwm-layout--fullscreen-p)
+          (with-slots ((x* x)
+                       (y* y)
+                       (width* width)
+                       (height* height))
+              (exwm-workspace--get-geometry exwm--frame)
+            (setq x x*
+                  y y*
+                  width width*
+                  height height*)))
+        ;; edited here
+        (when
+            (and (not (bound-and-true-p centaur-tabs-local-mode))
+                 (not (exwm-layout--fullscreen-p))
+                 (or (bound-and-true-p centaur-tabs-mode)
+                     (bound-and-true-p tab-line-mode)))
+          (setq y (+ y centaur-tabs-height)))
+        ;; edited here
+        (exwm--set-geometry id x y width height)
+        (xcb:+request exwm--connection (make-instance 'xcb:MapWindow :window id))
+        (exwm-layout--set-state id xcb:icccm:WM_STATE:NormalState)
+        (setq exwm--ewmh-state
+              (delq xcb:Atom:_NET_WM_STATE_HIDDEN exwm--ewmh-state))
+        (exwm-layout--set-ewmh-state id)
+        (exwm-layout--auto-iconify)))
+    (xcb:flush exwm--connection)))
+    #+end_src
+
+*** Extra configs
+    #+begin_src emacs-lisp :tangle exwm.el
+(use-package! app-launcher)
+    #+end_src
+
+* Bindings
+Evil mode isn't the modal package I'd actually like to use,
+due to this I have tried many others, never really feeling quite satisfied with any
+at some point I may write my own, however that is in future, and for now Vim will do.
+** Kakoune
+TODO: Write some more about this and split it up into blocks
+  #+begin_src emacs-lisp :tangle config.el
+
+(defun last-in-word ()
+   (interactive)
+   (forward-word)
+   (backward-char))
+
+(use-package! kakoune
+  :commands ryo-modal-mode
+  ;; Having a non-chord way to escape is important, since key-chords don't work in macros
+  :bind (("C-z" . ryo-modal-mode)
+         ("<escape>" . ryo-enter))
+  :hook
+  (after-init . my/kakoune-setup)
+  ((prog-mode text-mode) . ryo-enter)
+
+  :config
+  (defun ryo-enter () "Enter normal mode" (interactive) (ryo-modal-mode 1))
+
+  (defun my/kakoune-setup ()
+      "Call kakoune-setup-keybinds and then add some personal config."
+      (kakoune-setup-keybinds)
+
+      ;; Cursor config
+      (setq-default cursor-type '(bar . 1))
+      (setq ryo-modal-cursor-type 'box)
+      (setq ryo-modal-cursor-color "#ffffff")
+      (setq ryo-modal-default-cursor-color "#ffffff")
+
+      (define-key ryo-modal-mode-map (kbd "SPC h") 'help-command)
+      (define-key ryo-modal-mode-map (kbd "z") ctl-x-map)
+
+      (ryo-modal-keys
+       ("," save-buffer)
+       ("e" last-in-word :first '(kakoune-set-mark-here))
+       ("E" last-in-word :first '(kakoune-set-mark-if-inactive))
+       ("P" counsel-yank-pop)
+       ("m" mc/mark-next-like-this)
+       ("M" mc/skip-to-next-like-this)
+       ("n" mc/mark-previous-like-this)
+       ("N" mc/skip-to-previous-like-this)
+       ("M-m" mc/edit-lines)
+       ("*" mc/mark-all-like-this)
+       ("v" er/expand-region)
+       ("C-v" set-rectangular-region-anchor)
+       ("M-s" mc/split-region)
+       (";" (("q" delete-window)
+             ("v" split-window-horizontally)
+             ("s" split-window-vertically)))
+       ("C-w h" windmove-left)
+       ("C-w j" windmove-down)
+       ("C-w k" windmove-up)
+       ("C-w l" windmove-right)
+       ("C-u" scroll-down-command :first '(deactivate-mark))
+       ("C-d" scroll-up-command :first '(deactivate-mark)))))
+  (ryo-modal-mode)
+
+;; This overrides the default mark-in-region with a prettier-looking one,
+;; and provides a couple extra commands
+(use-package! visual-regexp
+  :ryo
+  ("s" vr/mc-mark)
+  ("?" vr/replace)
+  ("M-/" vr/query-replace))
+
+;; Emacs incremental search doesn't work with multiple cursors, but this fixes that
+(use-package! phi-search
+  :bind (("C-s" . phi-search)
+         ("C-r" . phi-search-backward)))
+
+;; Probably the first thing you'd miss is undo and redo, which requires an extra package
+;; to work like it does in kakoune (and almost every other editor).
+(use-package! undo-tree
+  :config
+  (global-undo-tree-mode)
+  (undo-tree-mode)
+  :ryo
+  ("u" undo-tree-undo)
+  ("U" undo-tree-redo)
+  ("SPC u" undo-tree-visualize)
+  :bind (:map undo-tree-visualizer-mode-map
+              ("h" . undo-tree-visualize-switch-branch-left)
+              ("j" . undo-tree-visualize-redo)
+              ("k" . undo-tree-visualize-undo)
+              ("l" . undo-tree-visualize-switch-branch-right)))
+  #+end_src
+
+** Boon
+A more emacs-y modal editing experience
+#+begin_src emacs-lisp :tangle no
+(use-package! boon
+  :init
+  (require 'boon-qwerty)
+  (require 'boon-spaceline)
+  (boon-mode)
+  :config
+  (define-key boon-moves-map "ö"  'boon-smarter-forward)
+  ;; (boon-powerline-theme) ;; if you want use powerline with Boon
+  (require 'boon-tutorial))
+  #+end_src
+** Meow
+TODO: Basically everything.
+#+begin_src emacs-lisp :tangle no
+(defun meow-setup ()
+  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+  (meow-motion-overwrite-define-key
+   '("j" . meow-next)
+   '("k" . meow-prev))
+  (meow-leader-define-key
+   ;; SPC j/k will run the original command in MOTION state.
+   '("j" . meow-motion-origin-command)
+   '("k" . meow-motion-origin-command)
+   ;; Use SPC (0-9) for digit arguments.
+   '("1" . meow-digit-argument)
+   '("2" . meow-digit-argument)
+   '("3" . meow-digit-argument)
+   '("4" . meow-digit-argument)
+   '("5" . meow-digit-argument)
+   '("6" . meow-digit-argument)
+   '("7" . meow-digit-argument)
+   '("8" . meow-digit-argument)
+   '("9" . meow-digit-argument)
+   '("0" . meow-digit-argument)
+   '("/" . meow-keypad-describe-key)
+   '("?" . meow-cheatsheet))
+  (meow-normal-define-key
+   '("0" . meow-expand-0)
+   '("9" . meow-expand-9)
+   '("8" . meow-expand-8)
+   '("7" . meow-expand-7)
+   '("6" . meow-expand-6)
+   '("5" . meow-expand-5)
+   '("4" . meow-expand-4)
+   '("3" . meow-expand-3)
+   '("2" . meow-expand-2)
+   '("1" . meow-expand-1)
+   '("-" . negative-argument)
+   '(";" . meow-reverse)
+   '("," . meow-inner-of-thing)
+   '("." . meow-bounds-of-thing)
+   '("[" . meow-beginning-of-thing)
+   '("]" . meow-end-of-thing)
+   '("a" . meow-append)
+   '("A" . meow-open-below)
+   '("b" . meow-back-word)
+   '("B" . meow-back-symbol)
+   '("c" . meow-change)
+   '("C" . meow-change-save)
+   '("d" . meow-C-d)
+   '("D" . meow-backward-delete)
+   '("e" . meow-next-word)
+   '("E" . meow-next-symbol)
+   '("f" . meow-find)
+   '("F" . meow-find-expand)
+   '("g" . meow-cancel)
+   '("G" . meow-grab)
+   '("h" . meow-left)
+   '("H" . meow-left-expand)
+   '("i" . meow-insert)
+   '("I" . meow-open-above)
+   '("j" . meow-next)
+   '("J" . meow-next-expand)
+   '("k" . meow-prev)
+   '("K" . meow-prev-expand)
+   '("l" . meow-right)
+   '("L" . meow-right-expand)
+   '("m" . meow-join)
+   '("n" . meow-search)
+   '("N" . meow-pop-search)
+   '("o" . meow-block)
+   '("O" . meow-block-expand)
+   '("p" . meow-yank)
+   '("P" . meow-yank-pop)
+   '("q" . meow-quit)
+   '("Q" . meow-goto-line)
+   '("r" . meow-replace)
+   '("R" . meow-swap-grab)
+   '("s" . meow-kill)
+   '("t" . meow-till)
+   '("T" . meow-till-expand)
+   '("u" . meow-undo)
+   '("U" . meow-undo-in-selection)
+   '("v" . meow-visit)
+   '("V" . meow-kmacro-matches)
+   '("w" . meow-mark-word)
+   '("W" . meow-mark-symbol)
+   '("x" . meow-line)
+   '("X" . meow-kmacro-lines)
+   '("y" . meow-save)
+   '("Y" . meow-sync-grab)
+   '("z" . meow-pop-selection)
+   '("Z" . meow-pop-all-selection)
+   '("&" . meow-query-replace)
+   '("%" . meow-query-replace-regexp)
+   '("'" . repeat)
+   '("\\" . quoted-insert)
+   '("<escape>" . meow-last-buffer)))
+
+(use-package meow
+  :demand t
+  :init
+  (meow-global-mode 1)
+  :config
+  ;; meow-setup is your custom function, see below
+  (meow-setup)
+  ;; If you want relative line number in NORMAL state(for display-line-numbers-mode)
+  (meow-setup-line-number)
+  ;; If you need setup indicator, see `meow-indicator' for customizing by hand.
+  ;; (meow-setup-indicator))
+  )
+#+end_src
+
+* i don't know what to call this
+** Tree sitter
+#+begin_src emacs-lisp :tangle config.el
+(use-package! tree-sitter
+  :config
+  ;; (require 'tree-sitter-langs)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  (add-to-list 'tree-sitter-major-mode-language-alist '(rustic-mode . rust))
+
+(use-package! tree-sitter-langs)
+#+end_src
+
+* User Interface
+    Fairly self-explanatory, just some UI hacks to fix things up a little.
+
+** Font
+    Speaking of Hack, I quite enjoy that font.
+    #+begin_src emacs-lisp :tangle config.el
+;; (setq doom-font (font-spec :family "Hack" :size 12))
+(setq doom-font (font-spec :family "Cozette" :size 12))
+    #+end_src
+
+** Theme
+    I genuinely haven't found a theme I enjoy more than doom-one.
+    #+begin_src emacs-lisp :tangle config.el
+;;(setq doom-theme 'doom-one)
+(use-package! base16-theme
+  :config
+  (load-theme 'base16-chalk t))
+  (set-cursor-color "#ffffff")
+    #+end_src
+
+    Set the colors from my theme in order to use it in other packages
+    #+begin_src emacs-lisp :tangle config.el
+(setq my/black (plist-get base16-chalk-colors :base00)
+      my/gray (plist-get base16-chalk-colors :base01)
+      my/lgray (plist-get base16-chalk-colors :base03)
+      ;; ... grayish colors from base02 to base06
+      my/white (plist-get base16-chalk-colors :base07)
+      my/red (plist-get base16-chalk-colors :base08)
+      my/orange (plist-get base16-chalk-colors :base09)
+      my/yellow (plist-get base16-chalk-colors :base0A)
+      my/green (plist-get base16-chalk-colors :base0B)
+      my/lblue (plist-get base16-chalk-colors :base0C)
+      my/blue (plist-get base16-chalk-colors :base0D)
+      my/purple (plist-get base16-chalk-colors :base0E)
+      my/brown (plist-get base16-chalk-colors :base0F))
+    #+end_src
+
+** Line numbers
+    I prefer relative line numbers for evil-mode, other values for this are
+    nil, which disables it, and
+    t, which enables absolute line numbering,
+    #+begin_src emacs-lisp :tangle config.el
+(setq display-line-numbers-type 'relative)
+    #+end_src
+
+** Modeline
+    Define my modeline (not doom modeline)
+#+begin_src emacs-lisp :tangle no
+(use-package! telephone-line
+  :config
+(setq telephone-line-lhs
+        '((evil   . (telephone-line-ryo-modal-segment))
+          (accent . (telephone-line-vc-segment
+                     telephone-line-erc-modified-channels-segment
+                     telephone-line-process-segment))))
+(setq telephone-line-rhs
+        '((nil    . (telephone-line-misc-info-segment))
+          (accent . (telephone-line-major-mode-segment))
+          (evil   . (telephone-line-airline-position-segment))))
+
+  (telephone-line-mode 1))
+#+end_src
+
+** Centaur tabs
+    TODO: Write something about this
+    #+begin_src emacs-lisp :tangle no
+
+(use-package! centaur-tabs
+  ;; :init
+  ;; (map! :n "gt" #'centaur-tabs-forward
+  ;;       :n "gT" #'centaur-tabs-backward
+  ;;       "s-m" #'centaur-tabs-backward
+  ;;       "s-," #'centaur-tabs-forward
+  ;;       "s-/" #'centaur-tabs-mode)
+  :hook
+  (ranger-mode . centaur-tabs-local-mode)
+  (calendar-mode . centaur-tabs-local-mode)
+  (helpful-mode . centaur-tabs-local-mode)
+  (exwm-floating-setup . centaur-tabs-local-mode)
+  :config
+  ;; (setq centaur-tabs-style "bar")
+  (setq centaur-tabs-set-modified-marker t)
+  (setq centaur-tabs-set-icons t)
+  ;; (setq centaur-tabs-gray-out-icons t)
+  ;; (setq centaur-tabs-set-bar 'under)
+  (setq centaur-tabs-show-navigation-buttons t)
+  (setq centaur-tabs-show-new-tab-button t)
+  (setq centaur-tabs-height 30)
+  (setq centaur-tabs-cycle-scope 'tabs)
+  ;; (setq centaur-tabs-plain-icons nil)
+  (setq centaur-tabs-label-fixed-length 20)
+  ;; (setq uniquify-separator "/")
+
+  (centaur-tabs-mode -1))
+    #+end_src
+
+* Org-mode
+    Configs for the mode this very file is written in.
+    Not much is happening here, because the defualts in Doom are very good.
+** Directory
+    Change the directory for org files.
+    #+begin_src emacs-lisp :tangle config.el
+(setq org-directory "~/Sync/org/")
+    #+end_src

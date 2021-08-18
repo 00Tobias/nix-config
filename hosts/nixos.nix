@@ -68,6 +68,10 @@
   };
 
   services = {
+    emacs = {
+      enable = true;
+      package = pkgs.emacsPgtkGcc;
+    };
     udev.packages = [ pkgs.yubikey-personalization ];
     xserver = {
       enable = true;

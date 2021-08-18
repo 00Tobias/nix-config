@@ -6,6 +6,8 @@
     nixpkgs-wayland.url = "github:colemickens/nixpkgs-wayland";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };
 
   outputs = { self, home-manager, nixpkgs, ... }@inputs: {
@@ -26,9 +28,25 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.toxic = import ./home.nix;
+            home-manager.users.toxic = { pkgs, ... }: {
+              imports = [
+                # inputs.nix-doom-emacs.hmModule
+                ./home.nix
+              ];
+              # # TODO: Waiting for literate config to get support
+              # programs.doom-emacs = {
+              #   enable = true;
+              #   doomPrivateDir = ./doom.d;
+              # };
+            };
           }
-          { nixpkgs.overlays = [ inputs.nur.overlay inputs.nixpkgs-wayland.overlay ]; }
+          {
+            nixpkgs.overlays = [
+              inputs.nur.overlay
+              inputs.nixpkgs-wayland.overlay
+              inputs.emacs-overlay.overlay
+            ];
+          }
         ];
       };
     };
