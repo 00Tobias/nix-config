@@ -22,6 +22,7 @@
       delta.enable = true;
       userName = "ToxicSalt";
       userEmail = "tobiasts@protonmail.com";
+      extraConfig = { credential = { helper = "store"; }; };
     };
 
     starship = {
