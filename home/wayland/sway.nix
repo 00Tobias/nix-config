@@ -17,7 +17,7 @@
         startup = [
           { autotiling = "exec autotiling"; }
         ];
-        terminal = "alacritty";
+        terminal = "foot";
       };
       extraOptions = [ "--verbose" "--debug" "--unsupported-gpu" "--my-next-gpu-wont-be-nvidia" ];
       extraSessionCommands = ''
