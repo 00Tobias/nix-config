@@ -2,8 +2,13 @@
 
   imports = [
     ./home/kakoune.nix
+    ./home/qutebrowser.nix
     ./home/firefox.nix
     ./home/term.nix
+    ./home/xorg/i3.nix
+    ./home/xorg/polybar.nix
+    ./home/xorg/rofi.nix
+    ./home/xorg/picom.nix
   ];
 
   # Let Home Manager install and manage itself
@@ -14,6 +19,7 @@
     username = "toxic";
     homeDirectory = "/home/toxic";
     packages = with pkgs; [
+      cozette
       discord-canary
       yubikey-manager
       yubikey-manager-qt
