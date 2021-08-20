@@ -27,15 +27,7 @@
       dwarf-fortress-packages.dwarf-fortress-full
       electron
       spotify
-      wlroots-eglstreams
-      # river
     ];
-  };
-
-  wayland = {
-    windowManager.sway = {
-      enable = true;
-    };
   };
 
   programs = {
