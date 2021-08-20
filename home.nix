@@ -1,9 +1,9 @@
 { config, pkgs, ... }: {
 
   imports = [
-    ./modules/kakoune.nix
-    ./modules/firefox.nix
-    ./modules/term.nix
+    ./home/kakoune.nix
+    ./home/firefox.nix
+    ./home/term.nix
   ];
 
   # Let Home Manager install and manage itself
@@ -20,6 +20,7 @@
       yubikey-personalization
       dwarf-fortress-packages.dwarf-fortress-full
       electron
+      spotify
       wlroots-eglstreams
       # river
     ];
@@ -47,7 +48,8 @@
     discord-canary = {
       name = "Discord Canary";
       icon = "discord-canary";
-      exec = "electron --enable-features=UseOzonePlatform --ozone-platform=wayland ${pkgs.discord-canary}/opt/DiscordCanary/resources/app.asar";
+      # exec = "electron --enable-features=UseOzonePlatform --ozone-platform=wayland ${pkgs.discord-canary}/opt/DiscordCanary/resources/app.asar";
+      exec = "DiscordCanary";
       terminal = false;
       categories = [ "Network" "InstantMessaging" ];
       type = "Application";
