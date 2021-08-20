@@ -9,6 +9,7 @@
     };
   };
   services = {
+    mullvad-vpn.enable = true;
     nextdns = {
       enable = true;
       arguments = [ "-config" "1dc65b" "-report-client-info" ];
