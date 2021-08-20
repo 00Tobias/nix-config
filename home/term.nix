@@ -1,6 +1,10 @@
 { config, pkgs, ... }: {
 
   programs = {
+    alacritty = {
+      enable = true;
+    };
+
     zsh = {
       enable = true;
       enableAutosuggestions = true;
