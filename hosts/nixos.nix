@@ -68,11 +68,16 @@
   };
 
   services = {
+    zfs = {
+      autoScrub.enable = true;
+      trim.enable = true;
+    };
     emacs = {
       enable = true;
       package = pkgs.emacsPgtkGcc;
     };
     udev.packages = [ pkgs.yubikey-personalization ];
+    pcscd.enable = true;
     xserver = {
       enable = true;
       layout = "se";
@@ -140,7 +145,6 @@
     home-manager
     nixpkgs-fmt
     nix-prefetch
-    qemu virt-manager # Qemu TODO: Modularize this
     gnome.gnome-tweaks
   ];
 
