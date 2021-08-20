@@ -1,9 +1,6 @@
 { config, pkgs, ... }: {
 
   home = {
-    sessionVariables = {
-      MOZ_ENABLE_WAYLAND = 1;
-    };
     file."${config.home.homeDirectory}/.mozilla/firefox/toxic/chrome/lepton" = {
       recursive = true;
       source = (pkgs.fetchFromGitHub {
