@@ -18,6 +18,7 @@
       yubikey-manager
       yubikey-manager-qt
       yubikey-personalization
+      dwarf-fortress-packages.dwarf-fortress-full
       electron
       wlroots-eglstreams
       # river
@@ -31,6 +32,7 @@
   };
 
   programs = {
+    obs-studio.enable = true;
     gpg.enable = true;
     password-store = {
       enable = true;
@@ -38,6 +40,7 @@
         PASSWORD_STORE_CLIP_TIME = "60";
       };
     };
+    rtorrent.enable = true;
   };
 
   xdg.desktopEntries = {
