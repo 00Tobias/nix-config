@@ -1,7 +1,7 @@
-{ config, pkgs, buildKakounePluginFrom2Nix, fetchFromGitHub, ... }:
+{ config, pkgs, /* buildKakounePluginFrom2Nix, fetchFromGitHub, */ ... }:
 
-let plugins = pkgs.callPackage ./kak-plugins.nix { };
-in
+# let kakounePlugins = pkgs.callPackage ./kak-plugins.nix { } // pkgs.kakounePlugins;
+# in
 {
   programs = {
     kakoune = {
@@ -249,7 +249,7 @@ in
       plugins = [
         pkgs.kakounePlugins.fzf-kak
         pkgs.kakounePlugins.parinfer-rust
-        plugins.kakoune-wiki
+        # kakounePlugins.kakoune-wiki
       ];
     };
   };
