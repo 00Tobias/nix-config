@@ -1,5 +1,8 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, buildKakounePluginFrom2Nix, fetchFromGitHub, ... }:
 
+let plugins = pkgs.callPackage ./kak-plugins.nix { };
+in
+{
   programs = {
     kakoune = {
       enable = true;
@@ -23,12 +26,14 @@
           {
             name = "InsertCompletionShow";
             option = ".*";
-            commands = "try %{ map window insert <tab> <c-n>\n map window insert <s-tab> <c-p> }";
+            commands = "try %{ map window insert <tab> <c-n>
+            map window insert <s-tab> <c-p> }";
           }
           {
             name = "InsertCompletionHide";
             option = ".*";
-            commands = "unmap window insert <tab> <c-n>\n unmap window insert <s-tab> <c-p>";
+            commands = "unmap window insert <tab> <c-n>
+            unmap window insert <s-tab> <c-p>";
           }
           {
             name = "WinDisplay";
@@ -64,7 +69,8 @@
           {
             name = "WinSetOption";
             option = "filetype=git-commit";
-            commands = "%{ set window autowrap_column 72\n autowrap-enable }";
+            commands = "%{ set window autowrap_column 72
+            autowrap-enable }";
           }
         ];
         keyMappings = [
@@ -203,8 +209,6 @@
             map -docstring "expand" global user e ': expand<ret>'
         }
 
-        plug "TeddyDD/kakoune-wiki"
-
         # kak-lsp
 
         # Start kak-lsp based on filetype
@@ -242,9 +246,10 @@
         # Colorscheme
         plug "raiguard/one.kak" theme %{ colorscheme one-darker }
       '';
-      plugins = with pkgs.kakounePlugins; [
-        fzf-kak
-        parinfer-rust
+      plugins = [
+        pkgs.kakounePlugins.fzf-kak
+        pkgs.kakounePlugins.parinfer-rust
+        plugins.kakoune-wiki
       ];
     };
   };
