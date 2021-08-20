@@ -50,18 +50,6 @@
     rtorrent.enable = true;
   };
 
-  xdg.desktopEntries = {
-    discord-canary = {
-      name = "Discord Canary";
-      icon = "discord-canary";
-      # exec = "electron --enable-features=UseOzonePlatform --ozone-platform=wayland ${pkgs.discord-canary}/opt/DiscordCanary/resources/app.asar";
-      exec = "DiscordCanary";
-      terminal = false;
-      categories = [ "Network" "InstantMessaging" ];
-      type = "Application";
-    };
-  };
-
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards

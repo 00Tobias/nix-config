@@ -15,7 +15,7 @@
         menu = "rofi -show run"; # combi
         modifier = "Mod4";
         startup = [
-          { autotiling = "exec_always --no-startup-id autotiling"; }
+          { command = "exec_always --no-startup-id autotiling"; }
         ];
         terminal = "alacritty";
       };

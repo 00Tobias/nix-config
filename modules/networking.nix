@@ -2,11 +2,7 @@
 
   networking = {
     resolvconf.useLocalResolver = true; # Use NextDNS resolver.
-    firewall = {
-      # For KDEConnect
-      allowedUDPPortRanges = [{ from = 1714; to = 1764; }];
-      allowedTCPPortRanges = [{ from = 1714; to = 1764; }];
-    };
+    kdeconnect.enable = true;
   };
   services = {
     mullvad-vpn.enable = true;
