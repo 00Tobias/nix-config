@@ -18,9 +18,11 @@
   programs.home-manager.enable = true;
 
   home = {
-    # Some information Home Manager needs
     username = "toxic";
     homeDirectory = "/home/toxic";
+    sessionPath = [
+      "~/scripts/"
+    ];
     packages = with pkgs; [
       cozette
       discord-canary
