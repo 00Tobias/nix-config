@@ -62,6 +62,9 @@
             "layout.css.backdrop-filter.enabled" = true;
             "browser.compactmode.show" = true;
             "browser.urlbar.suggest.calculator" = true;
+            # Betterfox overrides FIXME: doesn't do shit lol
+            "browser.search.separatePrivateDefault" = false;
+            "browser.search.separatePrivateDefault.ui.enabled" = false;
           };
           extraConfig = builtins.readFile (builtins.fetchurl {
             url = "https://raw.githubusercontent.com/yokoffing/Better-Fox/master/user.js";
@@ -102,6 +105,7 @@
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         browserpass
         clearurls
+        darkreader
         sidebery
         sponsorblock
         tabliss
