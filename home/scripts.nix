@@ -2,22 +2,21 @@
   # TODO: Maybe change this to source files from a ./scripts dir?
   home = {
     packages = with pkgs; [
-      wget
+      curl
       jq
     ];
     file = {
       "${config.home.homeDirectory}/scripts/fetchwal.sh" = {
         executable = true;
         text = ''
-          URL=$(wget -O - -q reddit.com/r/wallpaper/top/.json | jq '.data.children[] |.data.url' | head -1 | sed -e 's/^"//' -e 's/"$//')
-          FILE="/tmp/wallpapers/$URL##*/"
-
-          if [ ! -f "$FILE" ]; then
-            rm /tmp/wallpapers/*
-            wget -q -P /tmp/wallpapers/ $URL
-          else
-            false
-          fi
+          #!/usr/bin/env bash
+          
+          curl -s -H "User-Agent: cli:bash:v0.0.0" \
+            https://www.reddit.com/r/wallpaper/top/.json \
+            | jq '.data.children[].data.url' \
+            | sed '/.jpeg\|.jpg\|.png\|.webp/!d' \
+            | head -1 \
+            | xargs -P 0 -n 1 -I {} bash -c 'curl -s -O {} --output-dir /tmp/wallpapers/'
         '';
       };
     };
