@@ -93,8 +93,6 @@
           # cause the X server to try each in turn.
             Identifier     "Layout[all]"
             Screen      0  "Screen0" 0 0
-            InputDevice    "Keyboard0" "CoreKeyboard"
-            InputDevice    "Mouse0" "CorePointer"
             Option         "Xinerama" "0"
         EndSection
 
