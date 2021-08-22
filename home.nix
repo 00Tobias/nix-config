@@ -1,6 +1,7 @@
 { config, pkgs, ... }: {
 
   imports = [
+    ./home/scripts.nix
     ./home/kakoune.nix
     ./home/qutebrowser.nix
     ./home/firefox.nix
