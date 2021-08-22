@@ -11,6 +11,7 @@
     ./home/xorg/polybar.nix
     ./home/xorg/rofi.nix
     ./home/xorg/picom.nix
+    ./home/xorg/programs.nix
   ];
 
   # Let Home Manager install and manage itself
