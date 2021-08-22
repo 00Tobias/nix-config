@@ -1,8 +1,19 @@
 { config, pkgs, ... }: {
 
-  home.packages = with pkgs; [
-    autotiling
-  ];
+  home = {
+    file."${config.home.homeDirectory}/.xinitrc" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+
+        xrdb ~/.Xresources
+        exec i3
+      '';
+    };
+    packages = with pkgs; [
+      autotiling
+    ];
+  };
 
   xsession = {
     windowManager.i3 = {
@@ -14,11 +25,14 @@
         };
         menu = "rofi -show run"; # combi
         modifier = "Mod4";
-        startup = [
-          { command = "exec_always --no-startup-id autotiling"; }
-        ];
+        # startup = [
+        #   { command = "exec_always --no-startup-id autotiling"; }
+        # ];
         terminal = "alacritty";
       };
+      extraConfig = ''
+        exec_always --no-startup-id autotiling
+      '';
     };
   };
 }
