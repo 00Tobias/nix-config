@@ -10,6 +10,7 @@
     ./home/xorg/i3.nix
     ./home/xorg/polybar.nix
     ./home/xorg/rofi.nix
+    ./home/xorg/dunst.nix
     ./home/xorg/picom.nix
     ./home/xorg/programs.nix
   ];
@@ -21,7 +22,7 @@
     username = "toxic";
     homeDirectory = "/home/toxic";
     sessionPath = [
-      "~/scripts/"
+      "${config.home.homeDirectory}/scripts/"
     ];
     packages = with pkgs; [
       cozette

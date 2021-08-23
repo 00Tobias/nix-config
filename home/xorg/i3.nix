@@ -116,6 +116,7 @@
         startup = [
           { command = "autotiling"; always = true; notification = false; }
           { command = "systemctl --user restart picom"; always = true; notification = false; }
+          { command = "systemctl --user restart dunst"; always = true; notification = false; }
           { command = "discordcanary"; }
         ];
       };
