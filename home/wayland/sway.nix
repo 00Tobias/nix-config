@@ -16,7 +16,7 @@
         # menu = "";
         modifier = "Mod4";
         startup = [
-          { autotiling = "exec autotiling"; }
+          { command = "autotiling"; }
         ];
         terminal = "foot";
       };

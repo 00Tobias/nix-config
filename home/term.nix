@@ -57,6 +57,7 @@
   home.packages = with pkgs; [
     fd
     pfetch
+    pulsemixer
     zig
     xsel
   ];
