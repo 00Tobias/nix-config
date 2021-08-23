@@ -1,6 +1,7 @@
 { config, pkgs, ... }: {
   # TODO: Maybe change this to source files from a ./scripts dir?
   home = {
+    sessionPath = [ "${config.home.homeDirectory}/scripts/" ];
     packages = with pkgs; [
       curl
       jq
