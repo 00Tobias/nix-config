@@ -2,6 +2,7 @@
 
   imports = [
     ./home/scripts.nix
+    ./home/emacs.nix
     ./home/kakoune.nix
     ./home/qutebrowser.nix
     ./home/firefox.nix
@@ -21,9 +22,9 @@
   home = {
     username = "toxic";
     homeDirectory = "/home/toxic";
-    sessionPath = [
-      "${config.home.homeDirectory}/scripts/"
-    ];
+    sessionVariables = {
+      EDITOR = "kak";
+    };
     packages = with pkgs; [
       cozette
       discord-canary

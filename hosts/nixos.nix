@@ -72,10 +72,6 @@
       autoScrub.enable = true;
       trim.enable = true;
     };
-    emacs = {
-      enable = true;
-      package = pkgs.emacsPgtkGcc;
-    };
     udev.packages = [ pkgs.yubikey-personalization ];
     dbus.packages = with pkgs; [ gnome3.dconf ]; # NOTE: This fixes gnome themes, move this into something common when it matters
     pcscd.enable = true;
