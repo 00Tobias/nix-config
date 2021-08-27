@@ -23,6 +23,9 @@
       bind gk scrollto 0
       bind gj scrollto 100
 
+      " Leave Control + E to Sidebery
+      unbind <C-e>
+
       " Don't show the mode indicator on certain sites
       seturl youtube.com modeindicator false
 
