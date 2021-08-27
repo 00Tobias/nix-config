@@ -13,25 +13,42 @@
         fi
 
         ${config.home.homeDirectory}/.emacs.d/bin/doom sync -u
-
-        systemctl --user restart emacs
       '';
     };
 
+    # Explicitly installed doom dependencies
     packages = with pkgs; [
-      # Explicitly installed doom dependencies
       (ripgrep.override { withPCRE2 = true; })
+      gnumake
+      cmake
       libvterm
+      discount # Markdown
+
+      # Python
+      python3
+      black
+      pipenv
+      python-language-server
+      python39Packages.pyflakes
+      python39Packages.pyflakes
+      python39Packages.isort
+      python39Packages.pytest
+
+      # Rust
+      rust-analyzer
+      cargo
+      rustc
+      rustfmt
+
+      # Zig
+      zls
+
       fd
       sqlite
       editorconfig-core-c
       emacs-all-the-icons-fonts
       hack-font
 
-      # Language servers
-      zls
-      rust-analyzer
-      python-language-server
     ];
   };
 

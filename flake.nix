@@ -7,7 +7,6 @@
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };
 
   outputs = { self, home-manager, nixpkgs, ... }@inputs: {
@@ -30,14 +29,8 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
-                # inputs.nix-doom-emacs.hmModule
                 ./home.nix
               ];
-              # # TODO: Waiting for literate config to get support
-              # programs.doom-emacs = {
-              #   enable = true;
-              #   doomPrivateDir = ./doom.d;
-              # };
             };
           }
           {
