@@ -22,7 +22,7 @@
       nixos = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
-          ./hosts/nixos.nix
+          ./hosts/den.nix
           ./modules/networking.nix
           home-manager.nixosModules.home-manager
           {

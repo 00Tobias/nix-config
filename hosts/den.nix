@@ -8,7 +8,7 @@
   imports =
     [
       # Include the results of the hardware scan.
-      ./nixos-hardware.nix
+      ./den-hardware.nix
     ];
 
   nix = {
@@ -50,7 +50,7 @@
   networking = {
     interfaces.enp7s0.useDHCP = true;
     interfaces.wlp6s0.useDHCP = true;
-    hostName = "nixos";
+    hostName = "den";
     hostId = "7cd2d852"; # Required by ZFS
   };
 
@@ -182,7 +182,7 @@
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
-      pinentryFlavor = "curses";
+      pinentryFlavor = "gnome3";
     };
   };
 
