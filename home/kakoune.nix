@@ -3,6 +3,10 @@
 # let kakounePlugins = pkgs.callPackage ./kak-plugins.nix { } // pkgs.kakounePlugins;
 # in
 {
+  home.sessionVariables = {
+    EDITOR = "kak";
+  };
+
   programs = {
     kakoune = {
       enable = true;

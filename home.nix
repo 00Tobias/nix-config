@@ -22,9 +22,6 @@
   home = {
     username = "toxic";
     homeDirectory = "/home/toxic";
-    sessionVariables = {
-      EDITOR = "kak";
-    };
     packages = with pkgs; [
       cozette
       discord-canary
