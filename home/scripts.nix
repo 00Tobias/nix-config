@@ -7,7 +7,7 @@
       jq
     ];
     file = {
-      "${config.home.homeDirectory}/scripts/fetchwal.sh" = {
+      "${config.home.homeDirectory}/scripts/setwal.sh" = {
         executable = true;
         text = ''
           #!/usr/bin/env bash
@@ -18,6 +18,12 @@
             | sed '/.jpeg\|.jpg\|.png\|.webp/!d' \
             | head -1 \
             | xargs -P 0 -n 1 -I {} bash -c 'curl -s -O {} --output-dir /tmp/wallpapers/'
+
+          if [[ -v "WAYLAND_DISPLAY" ]]; then
+            echo "TODO: This lol"
+          else
+            feh /tmp/wallpapers --bg-fill
+          fi
         '';
       };
     };

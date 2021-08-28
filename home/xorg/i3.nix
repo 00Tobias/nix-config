@@ -8,7 +8,7 @@
 
         # From NixOS wiki, fixes dbus issues without a display manager
         if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
-        	eval $(dbus-launch --exit-with-session --sh-syntax)
+          eval $(dbus-launch --exit-with-session --sh-syntax)
         fi
         systemctl --user import-environment DISPLAY XAUTHORITY
 
@@ -125,8 +125,10 @@
           };
         startup = [
           { command = "autotiling"; always = true; notification = false; }
+          { command = "${config.home.homeDirectory}/scripts/setwal.sh"; always = true; notification = false; }
           { command = "systemctl --user restart picom"; always = true; notification = false; }
           { command = "systemctl --user restart dunst"; always = true; notification = false; }
+          { command = "$kdeconnect-indicator"; always = true; notification = false; }
           { command = "discordcanary"; }
         ];
       };
