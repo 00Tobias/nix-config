@@ -7,5 +7,5 @@
       persist = true;
     }];
   };
-  security.sudo.enable = false;
+  security.sudo.enable = true; # Changing this to false has some side effects, I should figure that out some day
 }

@@ -2,6 +2,7 @@
   programs = {
     feh.enable = true;
     mpv.enable = true;
+    obs-studio.enable = true;
   };
 
   services = {
