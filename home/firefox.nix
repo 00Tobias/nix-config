@@ -38,15 +38,14 @@
   programs = {
     firefox = {
       enable = true;
-      # package = pkgs.firefox-wayland;
-      package = pkgs.firefox.override {
-        cfg = {
-          # Gnome shell native connector
-          enableGnomeExtensions = true;
-          # Tridactyl native connector
-          enableTridactylNative = true;
-        };
-      };
+      # NOTE: The following causes Firefox not to build, due to some gtk3 buildInput error...
+      # Strange behaviour, have to look into that.
+      # package = pkgs.firefox.override {
+      #   cfg = {
+      #     # Tridactyl native connector
+      #     enableTridactylNative = true;
+      #   };
+      # };
 
       profiles = {
         toxic = {
@@ -91,6 +90,9 @@
             #sidebar-header {
               display: none;
             }
+
+            /* Center bookmarks toolbar */
+            #PlacesToolbarItems{ -moz-box-pack: center }
           '';
           userContent = ''
             @import "lepton/userContent.css";
