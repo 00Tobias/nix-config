@@ -111,6 +111,8 @@
         browserpass
         clearurls
         darkreader
+        privacy-redirect
+        noscript
         sidebery
         sponsorblock
         tabliss
