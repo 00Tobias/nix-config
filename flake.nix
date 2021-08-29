@@ -7,6 +7,7 @@
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = { self, home-manager, nixpkgs, ... } @ inputs: {
@@ -66,6 +67,7 @@
               inputs.nur.overlay
               inputs.nixpkgs-wayland.overlay
               inputs.emacs-overlay.overlay
+              inputs.neovim-nightly-overlay.overlay
             ];
           }
         ];
