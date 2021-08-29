@@ -6,6 +6,7 @@
     nixpkgs-wayland.url = "github:colemickens/nixpkgs-wayland";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
+    cachix.url = "github:cachix/cachix";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
@@ -25,6 +26,7 @@
     nixosHomeConfig = self.homeConfigurations.nixosHomeConfig.activationPackage;
 
     nixosConfigurations = {
+      nix.binaryCaches = [ "https://nix-community.cachix.org" ];
       den = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
@@ -45,6 +47,7 @@
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
                 ./home/scripts.nix
+                ./home/neovim.nix
                 ./home/emacs.nix
                 ./home/kakoune.nix
                 ./home/pass.nix
