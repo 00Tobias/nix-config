@@ -42,10 +42,21 @@
     keyMap = "se-lat6";
   };
 
-  users.users.toxic = {
-    isNormalUser = true;
-    shell = pkgs.zsh;
-    extraGroups = [ "wheel" "kvm" ];
+  users = {
+    users.toxic = {
+      isNormalUser = true;
+      shell = pkgs.zsh;
+      extraGroups = [ "wheel" "kvm" ];
+    };
+    # patorjk.com/software/taag/#p=display&f=Standard&t=den
+    # https://ascii.co.uk/art/dragon
+    motd = ''
+                  _,-'/-'/                             _
+      .      __,-; ,'( '/                           __| | ___ _ __
+       \.    `-.__`-._`:_,-._       _ , . ``       / _` |/ _ \ '_ \
+        `:-._,------' ` _,`--` -: `_ , ` ,' :  @  | (_| |  __/ | | |
+           `---..__,,--'            ` -'. -'       \__,_|\___|_| |_|
+    '';
   };
 
   services = {
