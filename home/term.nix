@@ -80,6 +80,10 @@
       extraConfig = { credential = { helper = "store"; }; };
     };
 
+    gh = {
+      enable = true;
+    };
+
     starship = {
       enable = true;
       enableZshIntegration = true;
@@ -106,6 +110,9 @@
     };
   };
   home.packages = with pkgs; [
+
+    update-nix-fetchgit # TODO: Split this into dev.nix or something?
+    
     (nerdfonts.override { fonts = [ "Hack" ]; })
     fd
     pfetch
