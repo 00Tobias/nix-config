@@ -1,12 +1,4 @@
-{ config, pkgs, /* buildKakounePluginFrom2Nix, fetchFromGitHub, */ ... }:
-
-# let kakounePlugins = pkgs.callPackage ./kak-plugins.nix { } // pkgs.kakounePlugins;
-# in
-{
-  home.sessionVariables = {
-    EDITOR = "kak";
-  };
-
+{ config, pkgs, ... }: {
   programs = {
     kakoune = {
       enable = true;
