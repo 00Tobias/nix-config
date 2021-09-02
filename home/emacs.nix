@@ -18,11 +18,26 @@
 
     # Explicitly installed doom dependencies
     packages = with pkgs; [
+      git
+      fd
       (ripgrep.override { withPCRE2 = true; })
       gnumake
       cmake
       libvterm
       discount # Markdown
+
+      # Lua
+      luajit
+      sumneko-lua-language-server
+      stylua
+
+      # Nix
+      rnix-lsp
+      nixpkgs-fmt
+
+      # C
+      clang
+      ccls
 
       # Python
       python3
