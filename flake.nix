@@ -37,6 +37,7 @@
           ./modules/mullvad.nix
           ./modules/nextdns.nix
           ./modules/pipewire.nix
+          ./modules/syncthing.nix
           ./modules/yubikey.nix
           ./modules/firejail.nix
           ./modules/unfree.nix
