@@ -1,5 +1,8 @@
-{ config, pkgs, ... }: {
-
+{ config, pkgs, ... }: 
+let
+  colors = import ../colors.nix;
+in
+{
   home = {
     file."${config.home.homeDirectory}/.xinitrc" = {
       executable = true;
@@ -20,22 +23,34 @@
       '';
     };
     packages = with pkgs; [
+      i3-resurrect
+      i3wsr
+      i3lock-fancy maim
       autotiling
     ];
   };
+
+  services.unclutter.enable = true;
 
   xsession = {
     windowManager.i3 = {
       enable = true;
       config = {
         terminal = "alacritty";
+        fonts = {
+          names = [ "Hack" ];
+          size = 12.0;
+        };
         gaps.inner = 10;
-        menu = "rofi -show run"; # combi
+        window.border = 2;
+        focus.mouseWarping = false;
+        menu = "rofi -show combi";
         modifier = "Mod4";
+        defaultWorkspace = "workspace number 1";
 
         assigns = {
-          "5" = [{ class = "^Steam$"; }];
-          "6" = [{ class = "^discord$"; }];
+          "workspace number 7" = [{ class = "^Steam$"; }];
+          "workspace number 6" = [{ class = "^Ripcord$"; } { class = "^discord$"; }];
         };
 
         floating.criteria = [
@@ -50,6 +65,23 @@
           { class = "^Steam$"; title = "^Steam Guard - Computer Authorization Required$"; }
           { title = "^Steam Keyboard$"; }
         ];
+
+        colors = with colors.theme; {
+          focused = {
+            text = "${foreground}";
+            background = "${background}";
+            border = "${blue}";
+            childBorder = "${blue}";
+            indicator = "${blue}";
+          };
+          unfocused = {
+            text = "${foreground}";
+            background = "${background}";
+            border = "${darkGrey}";
+            childBorder = "${darkGrey}";
+            indicator = "${darkGrey}";
+          };
+        };
 
         keybindings =
           let
@@ -116,20 +148,25 @@
             "${modifier}+Shift+0" = "move container to workspace number 10";
 
             "${modifier}+Return" = "exec ${terminal}";
-            "${modifier}+Shift+q" = "kill";
+            "${modifier}+w" = "kill";
             "${modifier}+space" = "exec ${menu}";
+
+            "${modifier}+p" = "exec flameshot gui";
+            "${modifier}+Shift+q" = "exec i3lock-fancy -f Hack-Regular -- maim";
 
             "${modifier}+Shift+c" = "reload";
             "${modifier}+Shift+r" = "restart";
             "${modifier}+Shift+e" = "exec i3-nagbar -t warning -m 'Do you want to exit i3?' -b 'Yes' 'i3-msg exit'";
           };
         startup = [
+          { command = "i3-resurrect -n"; always = true; notification = false; }
+          { command = "i3wsr"; always = true; notification = false; }
           { command = "autotiling"; always = true; notification = false; }
           { command = "${config.home.homeDirectory}/scripts/setwal.sh"; always = true; notification = false; }
           { command = "systemctl --user restart picom"; always = true; notification = false; }
           { command = "systemctl --user restart dunst"; always = true; notification = false; }
-          { command = "$kdeconnect-indicator"; always = true; notification = false; }
-          { command = "discordcanary"; }
+          { command = "kdeconnect-indicator"; always = true; notification = false; }
+          { command = "flameshot"; always = true; notification = false; }
         ];
       };
     };
