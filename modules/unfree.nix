@@ -6,7 +6,10 @@
   hardware.steam-hardware.enable = true;
 
   environment.systemPackages = with pkgs; [
-    discord
+    freetube # Inherently impure
+    ripcord
+    discord # For backup
     spotify
+    lunar-client # Minecraft :D
   ];
 }
