@@ -64,6 +64,19 @@
       enableVteIntegration = true;
     };
 
+    nushell = {
+      enable = true;
+      settings = {
+        completion_mode = "circular";
+        ctrlc_exit = false;
+        edit_mode = "vi";
+        prompt = "STARSHIP_SHELL= starship prompt";
+        rm_always_trash = true;
+        skip_welcome_message = true;
+        table_mode = "other";
+      };
+    };
+
     fzf = {
       enable = true;
       enableZshIntegration = true;
@@ -112,7 +125,7 @@
   home.packages = with pkgs; [
 
     update-nix-fetchgit # TODO: Split this into dev.nix or something?
-    
+
     (nerdfonts.override { fonts = [ "Hack" ]; })
     fd
     pfetch
