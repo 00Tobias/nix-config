@@ -12,7 +12,7 @@
             ${config.home.homeDirectory}/.emacs.d/bin/doom -y install
         fi
 
-        ${config.home.homeDirectory}/.emacs.d/bin/doom sync -u
+        ${config.home.homeDirectory}/.emacs.d/bin/doom sync
       '';
     };
 
