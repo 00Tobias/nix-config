@@ -30,6 +30,9 @@
 
     nixosConfigurations = {
       nix.binaryCaches = [ "https://nix-community.cachix.org" ];
+
+      system.stateVersion = "21.11";
+
       den = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
