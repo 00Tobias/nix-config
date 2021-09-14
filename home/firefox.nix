@@ -6,8 +6,8 @@
       source = (pkgs.fetchFromGitHub {
         owner = "black7375";
         repo = "Firefox-Ui-Fix";
-        rev = "319c39dbd07da2ed763a44928803b3f66ffe018c";
-        sha256 = "sha256-eGi0gkeqO2oVdwFU4cx7edYTq5Bo3YdnUjxutcO6HKM=";
+        rev = "87ce645514c17d9674d7cb1a3dbe63d392f52d67";
+        sha256 = "lb4efUeMEB2dkhkOzg5h01C/zIfoCpKYmiYp/0x2TDk=";
       });
     };
 
@@ -70,7 +70,7 @@
           };
           extraConfig = builtins.readFile (builtins.fetchurl {
             url = "https://raw.githubusercontent.com/yokoffing/Better-Fox/master/user.js";
-            sha256 = "sha256:1452756d84915f25dd7df9546f9801152ec950f30536717e7f9b377b634828b2";
+            sha256 = "0agp657jkl2i3chmxgf5jdk69lm9sycx1r0zkgz5xg0v5748r6hb";
           });
           userChrome = ''
             @import "lepton/userChrome.css";
