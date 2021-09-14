@@ -16,8 +16,8 @@ in
       stores = [ "${config.xdg.dataHome}/password-store" ];
     };
     extraConfig = {
-      modi = "combi,window,drun,run,file-browser";
-      combi-modi = "combi,window,drun,run";
+      modi = "combi,window,drun,run";
+      combi-modi = "window,drun,run";
       show-icons = true;
     };
     theme = with colors.theme;
