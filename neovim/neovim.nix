@@ -28,9 +28,9 @@ in
       { plugin = zig-vim; config = "lua vim.g.zig_fmt_autosave = 0"; }
       plenary-nvim
       nvim-web-devicons
-      { plugin = one-nvim; config = "lua vim.g.colors_name = 'one-nvim'"; }
+      { plugin = nvim-base16; config = wrapLuaConfig (import ./config/nvim-base16-config.nix {  }); }
       { plugin = feline-nvim; config = wrapLuaConfig (readFile ./config/feline-nvim-config.lua); }
-      { plugin = barbar-nvim; config = wrapLuaConfig (readFile ./config/barbar-nvim-config.lua); }
+      { plugin = bufferline-nvim; config = wrapLuaConfig (readFile ./config/bufferline-nvim-config.lua); }
       { plugin = gitsigns-nvim; config = "lua require('gitsigns').setup()"; }
       { plugin = which-key-nvim; config = wrapLuaConfig (readFile ./config/which-key-nvim-config.lua); }
       { plugin = specs-nvim; config = wrapLuaConfig (readFile ./config/specs-nvim-config.lua); }
@@ -47,9 +47,11 @@ in
       { plugin = registers-nvim; config = wrapLuaConfig (readFile ./config/registers-nvim-config.lua); }
       { plugin = kommentary; config = wrapLuaConfig (readFile ./config/kommentary-config.lua); }
       { plugin = nvim-autopairs; config = "lua require('nvim-autopairs').setup{}"; }
+      { plugin = pkgs.nur.repos.toxic-nur.vimPlugins.tabout-nvim; config = wrapLuaConfig (readFile ./config/tabout-nvim-config.lua); }
 
       { plugin = neorg; config = wrapLuaConfig (readFile ./config/neorg-config.lua); }
-      { plugin = neogit; config = wrapLuaConfig (readFile ./config/neogit-config.lua); }
+      # https://github.com/TimUntersberger/neogit/issues/206
+      # { plugin = neogit; config = wrapLuaConfig (readFile ./config/neogit-config.lua); }
 
       {
         plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
@@ -62,11 +64,9 @@ in
       { plugin = formatter-nvim; config = wrapLuaConfig (readFile ./config/formatter-nvim-config.lua); }
 
       { plugin = telescope-nvim; config = wrapLuaConfig (readFile ./config/telescope-nvim-config.lua); }
-      { plugin = telescope-fzy-native-nvim; config = "lua require('telescope').load_extension('fzy_native')"; }
     ];
 
     extraPackages = with pkgs; [
-      fzy
       git
       fd
       bat
@@ -77,7 +77,7 @@ in
       # Lua
       luajit
       sumneko-lua-language-server
-      stylua
+      luaformatter
 
       # Nix
       rnix-lsp

@@ -11,8 +11,8 @@ require('formatter').setup({
     lua = {
         function()
           return {
-            exe = "stylua",
-            args = { "--indent-type", "'Spaces'", "--indent-width", 4, "--stdin-filepath", vim.fn.fnameescape(vim.api.nvim_buf_get_name(0))},
+            exe = "lua-format",
+            args = { "--indent-width", 4 },
             stdin = true
           }
         end

@@ -68,6 +68,7 @@ wk.register({
     b = { "<cmd>Telescope git_branches<cr>", "Checkout branch" },
     f = { "<cmd>Telescope find_files<cr>", "Files" },
     h = { "<cmd>Telescope help_tags<cr>", "Help Pages" },
+    l = { "<cmd>Telescope live_grep<cr>", "Grep" },
     M = { "<cmd>Telescope man_pages<cr>", "Man Pages" },
     r = { "<cmd>Telescope oldfiles<cr>", "Recent Files" },
     R = { "<cmd>Telescope registers<cr>", "Registers" },
