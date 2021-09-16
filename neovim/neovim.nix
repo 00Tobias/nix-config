@@ -58,7 +58,7 @@
       # { plugin = bufferline-nvim; config = wrapLuaConfig (readFile ./config/bufferline-nvim-config.lua); }
 
       # { plugin = gitsigns-nvim; config = "lua require('gitsigns').setup()"; }
-      # { plugin = which-key-nvim; config = wrapLuaConfig (readFile ./config/which-key-nvim-config.lua); }
+      which-key-nvim
       # { plugin = specs-nvim; config = wrapLuaConfig (readFile ./config/specs-nvim-config.lua); }
       # cmd-parser-nvim
       # { plugin = range-highlight-nvim; config = "lua require'range-highlight'.setup{}"; }
@@ -89,7 +89,7 @@
       # { plugin = lsp_signature-nvim; config = "lua require('lsp_signature').setup()"; }
       # { plugin = formatter-nvim; config = wrapLuaConfig (readFile ./config/formatter-nvim-config.lua); }
 
-      # { plugin = telescope-nvim; config = wrapLuaConfig (readFile ./config/telescope-nvim-config.lua); }
+      telescope-nvim
     ];
 
     extraPackages = with pkgs; [
@@ -107,7 +107,6 @@
 
       # Fennel
       fennel
-      fnlfmt
 
       # Nix
       rnix-lsp
