@@ -92,6 +92,56 @@
           }
         ];
       };
+      haven = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/common.nix
+          ./hosts/haven.nix
+          # ./modules/mc-server.nix
+          ./modules/doas.nix
+          ./modules/kdeconnect.nix
+          ./modules/mullvad.nix
+          ./modules/nextdns.nix
+          ./modules/pipewire.nix
+          ./modules/syncthing.nix
+          ./modules/yubikey.nix
+          ./modules/firejail.nix
+          ./modules/unfree.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.toxic = { pkgs, ... }: {
+              imports = [
+                ./neovim/neovim.nix
+                ./home/scripts.nix
+                ./home/emacs.nix
+                ./home/kakoune.nix
+                ./home/pass.nix
+                ./home/qutebrowser.nix
+                ./home/firefox.nix
+                ./home/term.nix
+                ./home/gtk.nix
+                ./home/games.nix
+                ./home/xorg/i3.nix
+                ./home/xorg/polybar.nix
+                ./home/xorg/rofi.nix
+                ./home/xorg/dunst.nix
+                ./home/xorg/picom.nix
+                ./home/xorg/programs.nix
+              ];
+            };
+          }
+          {
+            nixpkgs.overlays = [
+              inputs.nur.overlay
+              inputs.nixpkgs-wayland.overlay
+              inputs.emacs-overlay.overlay
+              inputs.neovim-nightly-overlay.overlay
+            ];
+          }
+        ];
+      };
     };
   };
 }
