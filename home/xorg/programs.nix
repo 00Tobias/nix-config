@@ -18,5 +18,8 @@
 
     # Plover
     plover.dev
+
+    # Krita
+    krita
   ];
 }
