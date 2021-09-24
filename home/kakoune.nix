@@ -252,8 +252,6 @@
   home.packages = with pkgs; [
     kak-lsp
     rnix-lsp
-    luajitPackages.lua-lsp
-    cmake-language-server
     zls
   ];
 }
