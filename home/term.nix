@@ -1,16 +1,12 @@
-{ config, pkgs, ... }: {
-
+{ config, pkgs, ... }:
+let
+  colors = import ./colors.nix;
+in
+{
   programs = {
     alacritty = {
       enable = true;
       settings = {
-        window = {
-          dynamic_padding = true;
-          padding = {
-            x = 0;
-            y = 0;
-          };
-        };
         font = {
           normal = {
             family = "Hack Nerd Font";
@@ -25,32 +21,21 @@
             style = "Italic";
           };
         };
-        colors = {
+        colors = with colors.theme; {
           primary = {
-            background = "0x17191e";
-            foreground = "0xabb2bf";
+            background = "${background}";
+            foreground = "${foreground}";
           };
 
           normal = {
-            black = "0x1e2127";
-            red = "0xe06c75";
-            green = "0x98c379";
-            yellow = "0xd19a66";
-            blue = "0x61afef";
-            magenta = "0xc678dd";
-            cyan = "0x56b6c2";
-            white = "0x828791";
-          };
-
-          bright = {
-            black = "0x5c6370";
-            red = "0xe06c75";
-            green = "0x98c379";
-            yellow = "0xd19a66";
-            blue = "0x61afef";
-            magenta = "0xc678dd";
-            cyan = "0x56b6c2";
-            white = "0xe6efff";
+            black = "${black}";
+            red = "${red}";
+            green = "${green}";
+            yellow = "${yellow}";
+            blue = "${blue}";
+            magenta = "${magenta}";
+            cyan = "${cyan}";
+            white = "${foreground}";
           };
         };
       };
@@ -132,5 +117,6 @@
     pulsemixer
     zig
     xsel
+    unzip
   ];
 }
