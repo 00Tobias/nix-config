@@ -9,6 +9,9 @@
 (package! tree-sitter)
 (package! tree-sitter-langs)
 
+;; nixpkgs-fmt
+(package! nixpkgs-fmt)
+
 ;; Eva
 (package! eva
   :recipe (:host github :repo "meedstrom/eva"
