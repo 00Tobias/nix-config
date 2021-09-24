@@ -11,6 +11,9 @@
         executable = true;
         text = ''
           #!/usr/bin/env bash
+
+          # Clean the dir
+          rm -f /tmp/wallpapers/*
           
           curl -s -H "User-Agent: cli:bash:v0.0.0" \
             https://www.reddit.com/r/wallpaper/top/.json \
