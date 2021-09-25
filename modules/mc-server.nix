@@ -1,6 +1,7 @@
 { config, pkgs, ... }: {
   services.minecraft-server = {
     enable = true;
+    openFirewall = true;
     package = pkgs.papermc;
     eula = true;
     jvmOpts = "-Xmx4096M -Xms4096M";
