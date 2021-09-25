@@ -97,7 +97,7 @@
         modules = [
           ./hosts/common.nix
           ./hosts/haven.nix
-          # ./modules/mc-server.nix
+          ./modules/mc-server.nix
           ./modules/doas.nix
           ./modules/kdeconnect.nix
           ./modules/mullvad.nix
@@ -113,7 +113,6 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
-                ./neovim/neovim.nix
                 ./home/scripts.nix
                 ./home/emacs.nix
                 ./home/kakoune.nix
