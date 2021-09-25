@@ -29,6 +29,11 @@
   networking = {
     interfaces.enp2s0.useDHCP = true;
     interfaces.wlp0s20f3.useDHCP = true;
+
+    # wireless = {
+    #   enable = true;
+    # };
+
     hostName = "haven";
     hostId = "27cefd8d"; # Required by ZFS
   };
@@ -67,6 +72,15 @@
       layout = "se";
 
       displayManager.startx.enable = true;
+
+      libinput = {
+        enable = true;
+        touchpad = {
+          tapping = true;
+          scrollMethod = "twofinger";
+          naturalScrolling = true;
+        };
+      };
     };
   };
 
