@@ -1,17 +1,17 @@
 { config, pkgs, ... }: {
 
   home = {
-    file."${config.home.homeDirectory}/.mozilla/firefox/toxic/chrome/lepton" = {
+    file.".mozilla/firefox/toxic/chrome/lepton" = {
       recursive = true;
       source = (pkgs.fetchFromGitHub {
         owner = "black7375";
         repo = "Firefox-Ui-Fix";
-        rev = "87ce645514c17d9674d7cb1a3dbe63d392f52d67";
-        sha256 = "lb4efUeMEB2dkhkOzg5h01C/zIfoCpKYmiYp/0x2TDk=";
+        rev = "ea91233838ae806f41a024edd629c7a59c9edbb8";
+        sha256 = "03yy18i3wyw71dg5r0nsg3jzmk5hdsparmpphkdd1iwk8x7fyj18";
       });
     };
 
-    file."${config.home.homeDirectory}/.tridactylrc".text = ''
+    file.".tridactylrc".text = ''
       " Set a dark colorscheme
       colors dark
 
