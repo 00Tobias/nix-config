@@ -54,6 +54,7 @@
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
                 ./neovim/neovim.nix
+                ./emacs/emacs.nix
                 ./home/scripts.nix
                 ./home/emacs.nix
                 ./home/kakoune.nix

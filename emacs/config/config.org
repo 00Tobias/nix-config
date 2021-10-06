@@ -2,38 +2,34 @@
 #+AUTHOR: Tobias Carlsson
 #+STARTUP: overview
 
-* Introduction
-  This is my WIP literate config for the Doom Emacs framework...
-
-  - Doom Emacs ::
-    I have jumped editors more times than I can count, and every time I jumped back
-    to Emacs to give it another shot, I rolled my own config out of curiosity and stubbornness.
-    While this resulted in me learning a whole lot about my now favorite OS, for example
-    how much of an absolute pain it can be to configure from scratch, it took hours of my life away.
-    Since the config I had built up previously was heavily Doom inspired (with my own personal
-    chaotic flair to it), I decided to put in less effort and just use the damned framework.
-
-  - Bleeding edge ::
-    I use the master build of Emacs, staying mostly in sync with the Git repository.
-    I also use the recently merged native-comp feature, because *speed*.
-
-  - Thank you ::
-    Without the absolutely lovely and dedicated Emacs community and their seemingly
-    arcane elisp knowledge I would probably still be on Vim/Neovim right now, so
-    a huge thanks to all the people who's code I've yoinked snippets from all
-    over the internet.
-     - https://github.com/lucasgruss/.doom.d has been a huge boon +-mode+ for both my
-       literate config, my doom config, and my EXWM config.
-
-* System tools
+* My config of the Doom framework for the Emacs Operating system
+* Multimedia
 ** EMMS
 
 *** TODO
 
+** Eva
+An "Emacs based Virtual Assistant"
+#+begin_src emacs-lisp :tangle packages.el
+(package! eva
+  :recipe (:host github :repo "meedstrom/eva"
+           :files (:defaults "assets"  "renv" "*.R" "*.gnuplot")))
+#+end_src
+#+begin_src emacs-lisp :tangle config.el
+(use-package! eva)
+#+end_src
+** Elpher
+drew devault sim
+#+begin_src emacs-lisp :tangle packages.el
+(package! elpher)
+#+end_src
+#+begin_src emacs-lisp :tangle config.el
+(use-package! elpher)
+#+end_src
 * Bindings
 ** Kakoune
-This doesn't tangle into config.el, I currently use Objed instead.
-I do wish this package was more polished.
+This doesn't tangle into config.el, I currently use Evil mode.
+I do wish this package was more polished though...
   #+begin_src emacs-lisp :tangle no
 
 (defun last-in-word ()
@@ -131,29 +127,56 @@ I do wish this package was more polished.
 
 ** Theme
     #+begin_src emacs-lisp :tangle config.el
+;; Uses my custom theme in `themes'
 (setq doom-theme 'doom-one-darker)
     #+end_src
+** Line numbers
+    #+begin_src emacs-lisp :tangle config.el
+(setq display-line-numbers 'relative)
+    #+end_src
 
-* Misc
+* Lang
 ** Tree sitter
+#+begin_src emacs-lisp :tangle packages.el
+(package! tree-sitter)
+#+end_src
 #+begin_src emacs-lisp :tangle config.el
 (use-package! tree-sitter
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-  (add-to-list 'tree-sitter-major-mode-language-alist '(rustic-mode . rust)))
-
-(use-package! tree-sitter-langs)
+  ;; Fix compatibility with rustic-mode
+  (add-to-list 'tree-sitter-major-mode-language-alist '(rustic-mode . rust))
+  
+  ;; Add a few extra langs I use
+  (add-to-list 'tree-sitter-major-mode-language-alist '(fennel-mode . fennel))
+  (add-to-list 'tree-sitter-major-mode-language-alist '(nix-mode . nix))
+  (add-to-list 'tree-sitter-major-mode-language-alist '(elisp-mode . elisp))
+  (add-to-list 'tree-sitter-major-mode-language-alist '(zig-mode . zig)))
 #+end_src
-
-** nixpkgs-fmt
-Currently doom emacs uses nixfmt, and I prefer nixpkgs-fmt to it
+** Elisp
+Use lsp in config.org
+https://github.com/hlissner/doom-emacs/issues/4526 is merged
+#+begin_src emacs-lisp :tangle config.el
+(defun org-babel-edit-prep:elisp (babel-info)
+  (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))
+  (lsp))
+#+end_src
+** Nix
+Currently doom emacs uses nixfmt, I prefer nixpkgs-fmt to it.
+This should be available as a module in Doom once
+https://github.com/hlissner/doom-emacs/issues/4526 is merged
+#+begin_src emacs-lisp :tangle packages.el
+(package! nixpkgs-fmt)
+#+end_src
 #+begin_src emacs-lisp :tangle config.el
 (use-package! nixpkgs-fmt
   :config
   (add-hook 'nix-mode-hook 'nixpkgs-fmt-on-save-mode))
 #+end_src
-** Eva
-#+begin_src emacs-lisp :tangle config.el
-(use-package! eva)
+
+Doom doesn't have a `+lsp` flag for :nix
+#+begin_src emacs-lisp :tangle no
+(add-hook 'nix-mode-local-vars-hook #'lsp!)
 #+end_src
+* Misc
