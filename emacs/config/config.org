@@ -132,7 +132,7 @@ I do wish this package was more polished though...
     #+end_src
 ** Line numbers
     #+begin_src emacs-lisp :tangle config.el
-(setq display-line-numbers 'relative)
+(setq display-line-numbers-type 'visual)
     #+end_src
 
 * Lang

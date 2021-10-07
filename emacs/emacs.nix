@@ -32,7 +32,6 @@ let
   grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
 in
 {
-
   home = {
     sessionPath = [ "${config.home.homeDirectory}/.emacs.d/bin/" ];
 

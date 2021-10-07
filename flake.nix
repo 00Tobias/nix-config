@@ -56,7 +56,6 @@
                 ./emacs/emacs.nix
                 ./neovim/neovim.nix
                 ./home/scripts.nix
-                ./home/emacs.nix
                 ./home/kakoune.nix
                 ./home/pass.nix
                 ./home/qutebrowser.nix
