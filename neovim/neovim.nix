@@ -1,19 +1,29 @@
-{ config, pkgs, ... }:
-
-with builtins;
-
-# Workaround for home-manager not supporting init.lua yet
-# Courtesy of Neovitality
-let
-  wrapLuaConfig = luaConfig: ''
-    lua << EOF
-    ${luaConfig}
-    EOF
-  '';
-in
-{
+{ config, pkgs, ... }: {
   home.sessionVariables = {
     EDITOR = "nvim";
+    VISUAL = "nvim";
+  };
+
+  xdg.configFile = {
+    # # Commented out because home-manager still generates init.vim
+    # # https://github.com/nix-community/home-manager/issues/1907
+    # "nvim/init.lua".text = ''
+    #   vim.g["aniseed#env"] = {
+    #     module = "init",
+    #     compile = true
+    #   }
+    # '';
+
+    "nvim/fnl" = {
+      recursive = true;
+      source = ./config;
+      onChange = ''
+        nvim --headless -u NONE \
+          -c "let &runtimepath = &runtimepath . ',${pkgs.vimPlugins.aniseed},' . getcwd()" \
+          -c "lua require('aniseed.compile').glob('**/*.fnl', '${./config}', '${config.xdg.configHome}/nvim/lua')" \
+          +q
+      '';
+    };
   };
 
   programs.neovim = {
@@ -21,49 +31,68 @@ in
     package = pkgs.neovim-nightly;
     viAlias = true;
     vimAlias = true;
-    extraConfig = wrapLuaConfig (readFile ./init.lua);
+    extraConfig = "let g:aniseed#env = v:true";
+    # extraConfig = ''
+    #   lua << EOF
+    #   vim.g["aniseed#env"] = {
+    #     module = "init",
+    #     compile = true
+    #   }
+    #   EOF
+    # '';
 
     plugins = with pkgs.vimPlugins; [
+      # Libraries and essentials
+      aniseed # Necessity, my config doesn't load without it lol
+      plenary-nvim # Dep of *many* plugins
+      cmd-parser-nvim # Dep of range-highlight-nvim
+
+      # Languages
+      fennel-vim
+      conjure
       vim-nix
-      { plugin = zig-vim; config = "lua vim.g.zig_fmt_autosave = 0"; }
-      plenary-nvim
+      zig-vim
+
+      # Theming
       nvim-web-devicons
-      { plugin = nvim-base16; config = wrapLuaConfig (import ./config/nvim-base16-config.nix {  }); }
-      { plugin = feline-nvim; config = wrapLuaConfig (readFile ./config/feline-nvim-config.lua); }
-      { plugin = bufferline-nvim; config = wrapLuaConfig (readFile ./config/bufferline-nvim-config.lua); }
-      { plugin = gitsigns-nvim; config = "lua require('gitsigns').setup()"; }
-      { plugin = which-key-nvim; config = wrapLuaConfig (readFile ./config/which-key-nvim-config.lua); }
-      { plugin = specs-nvim; config = wrapLuaConfig (readFile ./config/specs-nvim-config.lua); }
-      cmd-parser-nvim
-      { plugin = range-highlight-nvim; config = "lua require'range-highlight'.setup{}"; }
-      { plugin = nvim-tree-lua; config = wrapLuaConfig (readFile ./config/nvim-tree-lua-config.lua); }
-      { plugin = nvim-colorizer-lua; config = "lua require'colorizer'.setup()"; }
-      { plugin = nvim-ts-rainbow; config = "lua require'nvim-treesitter.configs'.setup { rainbow = { enable = true, extended_mode = true } }"; }
-      { plugin = indent-blankline-nvim; config = "lua require('indent_blankline').setup { space_char_blankline = ' ', show_current_context = true }"; }
+      nvim-base16
+      feline-nvim
+      bufferline-nvim
+
+      # Nice-to-have highlighters and UI enhancements
+      gitsigns-nvim
+      which-key-nvim
+      registers-nvim
+      specs-nvim
+      range-highlight-nvim
+      nvim-colorizer-lua
+      nvim-ts-rainbow
+      indent-blankline-nvim
       todo-comments-nvim
 
-      { plugin = lightspeed-nvim; config = wrapLuaConfig (readFile ./config/lightspeed-nvim-config.lua); }
-      { plugin = numb-nvim; config = wrapLuaConfig (readFile ./config/numb-nvim-config.lua); }
-      { plugin = registers-nvim; config = wrapLuaConfig (readFile ./config/registers-nvim-config.lua); }
-      { plugin = kommentary; config = wrapLuaConfig (readFile ./config/kommentary-config.lua); }
-      { plugin = nvim-autopairs; config = "lua require('nvim-autopairs').setup{}"; }
-      { plugin = pkgs.nur.repos.toxic-nur.vimPlugins.tabout-nvim; config = wrapLuaConfig (readFile ./config/tabout-nvim-config.lua); }
+      # Movement and operator plugins
+      lightspeed-nvim
+      numb-nvim
+      kommentary
+      nvim-autopairs
+      pkgs.nur.repos.toxic-nur.vimPlugins.tabout-nvim
 
-      { plugin = neorg; config = wrapLuaConfig (readFile ./config/neorg-config.lua); }
+      # Neovim as an IDE/Emacs replacement
+      nvim-dap
+      nvim-dap-ui
+      # nvim-tree-lua
+      pkgs.nur.repos.toxic-nur.vimPlugins.nnn-nvim
+      telescope-nvim
+      formatter-nvim
+      neorg
       # https://github.com/TimUntersberger/neogit/issues/206
-      # { plugin = neogit; config = wrapLuaConfig (readFile ./config/neogit-config.lua); }
+      neogit
 
-      {
-        plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars);
-        config = wrapLuaConfig (readFile ./config/nvim-treesitter-config.lua);
-      }
-
-      { plugin = nvim-lspconfig; config = wrapLuaConfig (readFile ./config/nvim-lspconfig-config.lua); }
-      { plugin = lspkind-nvim; config = wrapLuaConfig (readFile ./config/lspkind-nvim-config.lua); }
-      { plugin = lsp_signature-nvim; config = "lua require('lsp_signature').setup()"; }
-      { plugin = formatter-nvim; config = wrapLuaConfig (readFile ./config/formatter-nvim-config.lua); }
-
-      { plugin = telescope-nvim; config = wrapLuaConfig (readFile ./config/telescope-nvim-config.lua); }
+      # Lsp and tree-sitter
+      { plugin = nvim-treesitter.withPlugins (_: pkgs.tree-sitter.allGrammars); }
+      nvim-lspconfig
+      lspkind-nvim
+      lsp_signature-nvim
     ];
 
     extraPackages = with pkgs; [
@@ -78,6 +107,7 @@ in
       luajit
       sumneko-lua-language-server
       luaformatter
+      fennel
 
       # Nix
       rnix-lsp

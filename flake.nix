@@ -53,8 +53,8 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
-                ./neovim/neovim.nix
                 ./emacs/emacs.nix
+                ./neovim/neovim.nix
                 ./home/scripts.nix
                 ./home/emacs.nix
                 ./home/kakoune.nix
