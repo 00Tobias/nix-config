@@ -1,9 +1,22 @@
 {
   description = "Toxic's all-encompassing Nix config based on flakes";
 
+  nixConfig = {
+    substituters = [
+      "https://cache.nixos.org"
+      "https://nix-community.cachix.org"
+      "https://nixpkgs-wayland.cachix.org"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-wayland.url = "github:colemickens/nixpkgs-wayland";
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
     cachix.url = "github:cachix/cachix";
@@ -28,11 +41,9 @@
     };
     nixosHomeConfig = self.homeConfigurations.nixosHomeConfig.activationPackage;
 
+    system.stateVersion = "21.11";
+
     nixosConfigurations = {
-      nix.binaryCaches = [ "https://nix-community.cachix.org" ];
-
-      system.stateVersion = "21.11";
-
       den = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
@@ -62,6 +73,8 @@
                 ./home/term.nix
                 ./home/gtk.nix
                 ./home/games.nix
+                ./home/wayland/sway.nix
+                ./home/wayland/foot.nix
                 ./home/xorg/i3.nix
                 ./home/xorg/polybar.nix
                 ./home/xorg/rofi.nix
@@ -74,12 +87,11 @@
           {
             nixpkgs.overlays = [
               # inputs.nur.overlay
-              inputs.nixpkgs-wayland.overlay
+              inputs.nixpkgs-wayland.overlay-egl
               inputs.emacs-overlay.overlay
               inputs.neovim-nightly-overlay.overlay
 
               # This is also temporary
-              # inputs.toxic-nur.overlay
               (final: prev: {
                 nur = import inputs.nur {
                   nurpkgs = prev;
