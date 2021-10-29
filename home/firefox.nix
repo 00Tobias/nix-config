@@ -1,13 +1,12 @@
 { config, pkgs, ... }: {
-
   home = {
     file.".mozilla/firefox/toxic/chrome/lepton" = {
       recursive = true;
       source = (pkgs.fetchFromGitHub {
         owner = "black7375";
         repo = "Firefox-Ui-Fix";
-        rev = "ea91233838ae806f41a024edd629c7a59c9edbb8";
-        sha256 = "03yy18i3wyw71dg5r0nsg3jzmk5hdsparmpphkdd1iwk8x7fyj18";
+        rev = "2c50ba45dd0953d4cd5fe1c5d693079a67588f4f";
+        sha256 = "1vj7zv5awhqw90y066zyndxxa3rgdd8kvsxsvddpc639x175wqkk";
       });
     };
 
@@ -28,6 +27,7 @@
 
       " Don't show the mode indicator on certain sites
       seturl youtube.com modeindicator false
+      seturl twitch.tv modeindicator false
 
       " Don't show the mode indicator in fullscreen
       autocmd FullscreenEnter .* set modeindicator false
