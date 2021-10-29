@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: 
+{ config, pkgs, ... }:
 let
   colors = import ../colors.nix;
 in
@@ -19,13 +19,17 @@ in
                 dbus-update-activation-environment DISPLAY XAUTHORITY
         fi
 
+        # Source Xresources
+        xrdb ~/.Xresources
+
         exec i3
       '';
     };
     packages = with pkgs; [
       i3-resurrect
       i3wsr
-      i3lock-fancy maim
+      i3lock-fancy
+      maim
       autotiling
     ];
   };
@@ -33,10 +37,16 @@ in
   services.unclutter.enable = true;
 
   xsession = {
+    pointerCursor = {
+      package = pkgs.capitaine-cursors;
+      name = "capitaine-cursors";
+      size = 16;
+    };
+
     windowManager.i3 = {
       enable = true;
       config = {
-        terminal = "alacritty";
+        terminal = "kitty";
         fonts = {
           names = [ "Hack" ];
           size = 12.0;
@@ -115,7 +125,7 @@ in
             "${modifier}+f" = "fullscreen toggle";
 
             "${modifier}+t" = "layout tabbed";
-            "${modifier}+e" = "layout toggle split"; # NOTE: Fit for removal?
+            "${modifier}+e" = "layout toggle split";
 
             "${modifier}+Shift+s" = "floating toggle";
             "${modifier}+s" = "focus mode_toggle";
