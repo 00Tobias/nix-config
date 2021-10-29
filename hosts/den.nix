@@ -7,13 +7,6 @@
       ./den-hardware.nix
     ];
 
-  nix = {
-    package = pkgs.nixUnstable;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-    '';
-  };
-
   # For zsh home manager config, gets completion for system packages
   environment.pathsToLink = [ "/share/zsh" ];
 
