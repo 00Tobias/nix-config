@@ -1,12 +1,8 @@
 { config, pkgs, ... }: {
   programs = {
-    feh.enable = true;
-    mpv.enable = true;
+    feh.enable = true; # X only
+    mpv.enable = true; # Doesn't work on Wayland
     obs-studio.enable = true;
-  };
-
-  services = {
-    flameshot.enable = true;
   };
 
   home.packages = with pkgs; [
@@ -16,10 +12,14 @@
     xfce.thunar-volman
     xfce.thunar-media-tags-plugin
 
+    # Gemini client
+    lagrange
+
     # Plover
     plover.dev
 
-    # Krita
+    # Creative
     krita
+    kdenlive
   ];
 }

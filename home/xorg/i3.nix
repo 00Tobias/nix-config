@@ -26,12 +26,17 @@ in
       '';
     };
     packages = with pkgs; [
+      xsel
       i3-resurrect
       i3wsr
       i3lock-fancy
       maim
       autotiling
     ];
+  };
+
+  services = {
+    flameshot.enable = true;
   };
 
   services.unclutter.enable = true;

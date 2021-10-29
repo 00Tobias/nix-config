@@ -65,6 +65,7 @@
               imports = [
                 ./emacs/emacs.nix
                 ./neovim/neovim.nix
+                ./home/programs.nix
                 ./home/scripts.nix
                 ./home/kakoune.nix
                 ./home/pass.nix
@@ -80,7 +81,6 @@
                 ./home/xorg/rofi.nix
                 ./home/xorg/dunst.nix
                 ./home/xorg/picom.nix
-                ./home/xorg/programs.nix
               ];
             };
           }
