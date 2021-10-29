@@ -45,7 +45,8 @@ in
               ${config.home.homeDirectory}/.emacs.d/bin/doom -y install
           fi
 
-          ${config.home.homeDirectory}/.emacs.d/bin/doom sync
+          # Sync the config and run 'doom doctor' to make sure there are no errors
+          ${config.home.homeDirectory}/.emacs.d/bin/doom sync && ${config.home.homeDirectory}/.emacs.d/bin/doom doctor
         '';
       };
 
@@ -60,11 +61,19 @@ in
       # Magit
       git
 
-      # Deps for Doom
+      # Deps for Doom and modules
       fd
       sqlite
       (ripgrep.override { withPCRE2 = true; })
-      aspell # :spell
+
+      # :checkers spell
+      (aspellWithDicts (ds: with ds; [
+        en
+        en-computers
+        en-science
+        sv
+      ]))
+
       wordnet # :lookup
       languagetool # :grammar
       libvterm # :vterm
@@ -76,8 +85,7 @@ in
       emacs-all-the-icons-fonts
       hack-font
 
-      # Tree sitter
-      # (pkgs.tree-sitter.withPlugins (_: pkgs.tree-sitter.allGrammars))
+      ## Languages
 
       # Nix
       rnix-lsp
@@ -91,6 +99,9 @@ in
       cmake
       clang
       ccls
+
+      # Shell
+      shellcheck
 
       # Common-lisp
       sbcl

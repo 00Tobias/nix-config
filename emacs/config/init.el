@@ -12,16 +12,13 @@
        doom-quit
        hl-todo
        indent-guides
-       minimap
        modeline
-       nav-flash
        ophints
        (popup +defaults)
        tabs
        (treemacs +lsp)
        vc-gutter
        window-select
-       workspaces
 
        :editor
        (evil +everywhere)
@@ -45,7 +42,7 @@
 
        :checkers
        (syntax +childframe)
-       spell
+       (spell +aspell)
        grammar
 
        :tools

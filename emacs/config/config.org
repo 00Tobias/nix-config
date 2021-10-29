@@ -1,5 +1,4 @@
 #+TITLE:  Literate config for my editor
-#+AUTHOR: Tobias Carlsson
 #+STARTUP: overview
 
 * My config of the Doom framework for the Emacs Operating system
@@ -126,10 +125,11 @@ I do wish this package was more polished though...
     #+end_src
 
 ** Theme
-    #+begin_src emacs-lisp :tangle config.el
-;; Uses my custom theme in `themes'
+Uses my custom theme in =themes=
+#+begin_src emacs-lisp :tangle config.el
 (setq doom-theme 'doom-one-darker)
-    #+end_src
+#+end_src
+
 ** Line numbers
     #+begin_src emacs-lisp :tangle config.el
 (setq display-line-numbers-type 'visual)
@@ -154,6 +154,18 @@ I do wish this package was more polished though...
   (add-to-list 'tree-sitter-major-mode-language-alist '(elisp-mode . elisp))
   (add-to-list 'tree-sitter-major-mode-language-alist '(zig-mode . zig)))
 #+end_src
+
+** Symex
+#+begin_src emacs-lisp :tangle no
+(package! symex)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(use-package! symex
+  :config
+  (symex-initialize))
+#+end_src
+
 ** Elisp
 Use lsp in config.org
 https://github.com/hlissner/doom-emacs/issues/4526 is merged
@@ -162,6 +174,7 @@ https://github.com/hlissner/doom-emacs/issues/4526 is merged
   (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))
   (lsp))
 #+end_src
+
 ** Nix
 Currently doom emacs uses nixfmt, I prefer nixpkgs-fmt to it.
 This should be available as a module in Doom once
