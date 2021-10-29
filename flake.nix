@@ -45,7 +45,6 @@
           ./modules/pipewire.nix
           ./modules/syncthing.nix
           ./modules/yubikey.nix
-          ./modules/firejail.nix
           ./modules/unfree.nix
           home-manager.nixosModules.home-manager
           {
