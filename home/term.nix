@@ -13,6 +13,7 @@
     };
     packages = with pkgs; [
       update-nix-fetchgit # TODO: Split this into dev.nix or something?
+      bombadillo
       fd
       (nnn.override { withNerdIcons = true; })
       dragon-drop # Only X, for nnn dragdrop plugin
@@ -30,10 +31,6 @@
       enableCompletion = true;
       enableSyntaxHighlighting = true;
       enableVteIntegration = true;
-      #   initExtra = builtins.readFile (pkgs.fetchurl {
-      #     url = "https://raw.githubusercontent.com/jarun/nnn/1020f37320b2fccb740c84f011864c90cafec6dd/misc/quitcd/quitcd.bash_zsh";
-      #     sha256 = "1ilifpr3nvz3s4s0a72mggk4jdxiqablnfg0vlihjpw24ri7vxm5";
-      #   });
     };
 
     nushell = {
@@ -79,7 +76,7 @@
       enableZshIntegration = true;
     };
 
-    exa = {
+    lsd = {
       enable = true;
       enableAliases = true;
     };
@@ -123,6 +120,7 @@
     # ranger
     "ranger/rc.conf" = {
       text = ''
+        set draw_borders both
         set preview_images true
         set preview_images_method kitty
         default_linemode devicons
