@@ -7,7 +7,7 @@
       jq
     ];
     file = {
-      "${config.home.homeDirectory}/scripts/setwal.sh" = {
+      "scripts/setwal.sh" = {
         executable = true;
         text = ''
           #!/usr/bin/env bash
@@ -22,8 +22,9 @@
             | head -1 \
             | xargs -P 0 -n 1 -I {} bash -c 'curl -s -O {} --output-dir /tmp/wallpapers/'
 
+          # If I'm on wayland, don't do anything, sway manages it for me :^)
           if [[ -v "WAYLAND_DISPLAY" ]]; then
-            echo "TODO: This lol"
+            true
           else
             feh /tmp/wallpapers --bg-fill
           fi
