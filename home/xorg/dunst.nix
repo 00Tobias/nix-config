@@ -1,4 +1,4 @@
-{ config, pkgs, ... }: 
+{ config, pkgs, ... }:
 let
   colors = import ../colors.nix;
 in
@@ -11,8 +11,7 @@ in
     };
     settings = with colors.theme; {
       global = {
-        monitor = 0;
-        follow = "none";
+        follow = "keyboard";
         geometry = "300x5-20+44";
 
         progress_bar = true;
@@ -54,13 +53,6 @@ in
       urgency_critical = {
         fullscreen = "show";
         background = "${red}";
-      };
-
-      shortcuts = {
-        close = "ctrl+space";
-        close_all = "ctrl+shift+space";
-        history = "ctrl+grave";
-        context = "ctrl+shift+period";
       };
     };
   };
