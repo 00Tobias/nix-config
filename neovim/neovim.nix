@@ -1,8 +1,8 @@
 { config, pkgs, ... }: {
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    VISUAL = "nvim";
-  };
+  # home.sessionVariables = {
+  #   EDITOR = "nvim";
+  #   VISUAL = "nvim";
+  # };
 
   xdg.configFile = {
     # # Commented out because home-manager still generates init.vim
@@ -23,6 +23,11 @@
           -c "lua require('aniseed.compile').glob('**/*.fnl', '${./config}', '${config.xdg.configHome}/nvim/lua')" \
           +q
       '';
+    };
+
+    # base-16 theme based on home/colors.nix
+    "nvim/fnl/colors.fnl" = {
+      text = import ./colors.nix { };
     };
   };
 
@@ -76,13 +81,18 @@
       kommentary
       nvim-autopairs
       pkgs.nur.repos.toxic-nur.vimPlugins.tabout-nvim
+      pkgs.nur.repos.toxic-nur.vimPlugins.nvim-parinfer
 
       # Neovim as an IDE/Emacs replacement
       nvim-dap
       nvim-dap-ui
-      # nvim-tree-lua
-      pkgs.nur.repos.toxic-nur.vimPlugins.nnn-nvim
+      nvim-tree-lua
+
       telescope-nvim
+      telescope-fzf-native-nvim
+      telescope-dap-nvim
+      telescope-project-nvim
+
       formatter-nvim
       neorg
       # https://github.com/TimUntersberger/neogit/issues/206

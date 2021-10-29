@@ -30,3 +30,7 @@
 (util.lnnoremap :fsr "Telescope lsp_references")
 (util.lnnoremap :fsS "Telescope lsp_document_symbols")
 (util.lnnoremap :fss "Telescope lsp_workspace_symbols")
+
+(telescope.load_extension :fzf)
+;; (telescope.load_extension :dap)
+;; (telescope.load_extension :project)
