@@ -42,9 +42,9 @@
             | head -1 \
             | xargs -P 0 -n 1 -I {} bash -c 'curl -s -O {} --output-dir /tmp/wallpapers/'
 
-          # If I'm on wayland, don't do anything, sway manages it for me :^)
+          # Program to set wallpaper based on which display protocol is used
           if [[ -v "WAYLAND_DISPLAY" ]]; then
-            true
+            swaybg -i /tmp/wallpapers/* -m fill
           else
             feh /tmp/wallpapers --bg-fill
           fi

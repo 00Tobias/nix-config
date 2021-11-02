@@ -13,10 +13,17 @@ in
     j4-dmenu-desktop
     fzf
 
+    # Sway
     wl-clipboard
     sway-contrib.grimshot
     swaylock-fancy
     autotiling
+
+    # For media keys
+    pulsemixer
+    playerctl
+
+    imv # Wayland feh alternative
   ];
 
   wayland = {
@@ -56,9 +63,9 @@ in
         };
         floating.criteria = [
           { title = "floating-terminal"; }
-          { class = "^Steam$"; title = "^Friends$"; }
+          { class = "^Steam$"; title = "Friends List"; }
           { class = "^Steam$"; title = "Steam - News"; }
-          { class = "^Steam$"; title = ".* - Chat"; }
+          { class = "^Steam$"; title = ".* - Chat"; } # Steam has changed the title of the class window, this no longer works
           { class = "^Steam$"; title = "^Settings$"; }
           { class = "^Steam$"; title = ".* - event started"; }
           { class = "^Steam$"; title = ".* CD key"; }
@@ -68,16 +75,18 @@ in
           { title = "^Steam Keyboard$"; }
         ];
 
+        # Disable built-in bar, since I use waybar
+        bars = [ ];
         fonts = {
           names = [ "Hack" ];
-          size = 12.0;
+          size = 11.0;
         };
         gaps.inner = 10;
         window.border = 2;
         colors = {
           focused = {
             text = "${foreground}";
-            background = "${background}";
+            background = "${blue}";
             border = "${blue}";
             childBorder = "${blue}";
             indicator = "${blue}";
@@ -85,9 +94,9 @@ in
           unfocused = {
             text = "${foreground}";
             background = "${background}";
-            border = "${darkGrey}";
-            childBorder = "${darkGrey}";
-            indicator = "${darkGrey}";
+            border = "${lighterBlack}";
+            childBorder = "${lighterBlack}";
+            indicator = "${lighterBlack}";
           };
         };
 
@@ -160,6 +169,14 @@ in
             "${modifier}+w" = "kill";
             "${modifier}+space" = "exec ${menu}";
 
+            # Media keys
+            "XF86AudioRaiseVolume" = "exec pulsemixer --change-volume +1";
+            "XF86AudioLowerVolume" = "exec pulsemixer --change-volume -1";
+            "XF86AudioMute" = "exec pulsemixer --toggle-mute";
+            "XF86AudioPlay" = "exec playerctl play-pause";
+            "XF86AudioNext" = "exec playerctl next";
+            "XF86AudioPrev" = "exec playerctl prev";
+
             "${modifier}+p" = "exec grimshot copy area";
             # "${modifier}+Shift+q" = "exec swaylock -c ${lib.removePrefix "#" background}";
             "${modifier}+Shift+q" = "exec swaylock-fancy";
@@ -169,8 +186,8 @@ in
             "${modifier}+Shift+e" = "exec sway-nagbar -t warning -m 'Do you want to exit sway?' -b 'Yes' 'swaymsg exit'";
           };
         startup = [
+          { command = "systemctl --user restart waybar"; always = true; }
           { command = "autotiling"; always = true; }
-          # Only fetches the wallpaper, I can't tell if this is scuffed or not
           { command = "${config.home.homeDirectory}/scripts/setwal.sh"; always = true; }
           {
             # This is stupid
@@ -197,6 +214,10 @@ in
         # Wayland Steam stuff, unstable is an understatement
         # export SDL_VIDEODRIVER=wayland
         # export SDL_DYNAMIC_API=${pkgs.SDL2}/lib/libSDL2-2.0.so.0
+
+        # QT Wayland
+        QT_QPA_PLATFORM=wayland-egl
+        QT_WAYLAND_FORCE_DPI=physical
 
         export MOZ_ENABLE_WAYLAND=1
       '';
