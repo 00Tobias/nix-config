@@ -71,7 +71,8 @@
                 ./home/scripts.nix
                 ./home/pass.nix
                 ./home/qutebrowser.nix
-                ./home/firefox.nix
+                ./home/discord.nix
+                ./home/spotify.nix
                 ./home/term.nix
                 ./home/gtk.nix
                 ./home/games.nix
@@ -104,7 +105,6 @@
         modules = [
           ./hosts/common.nix
           ./hosts/haven.nix
-          ./modules/mc-server.nix
           ./modules/doas.nix
           ./modules/kdeconnect.nix
           ./modules/mullvad.nix
@@ -120,25 +120,22 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
+                ./emacs/emacs.nix
+                ./home/programs.nix
                 ./home/langs.nix
                 ./home/scripts.nix
-                ./home/emacs.nix
                 ./home/pass.nix
                 ./home/qutebrowser.nix
+                ./home/spotify.nix
                 ./home/term.nix
                 ./home/gtk.nix
                 ./home/games.nix
-                ./home/xorg/i3.nix
-                ./home/xorg/polybar.nix
-                ./home/xorg/rofi.nix
                 ./home/kakoune/kakoune.nix
                 ./home/firefox/firefox.nix
                 ./home/wayland/sway.nix
                 ./home/wayland/waybar.nix
                 ./home/wayland/foot.nix
                 ./home/xorg/dunst.nix
-                ./home/xorg/picom.nix
-                ./home/xorg/programs.nix
               ];
             };
           }
