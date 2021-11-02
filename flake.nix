@@ -85,6 +85,7 @@
                 ./home/xorg/rofi.nix
                 ./home/xorg/dunst.nix
                 ./home/xorg/picom.nix
+                ./home/xorg/kitty.nix
               ];
             };
           }

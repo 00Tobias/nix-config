@@ -6,11 +6,11 @@ in
   programs.rofi = {
     enable = true;
     font = "Hack 12";
-    terminal = "alacritty";
-    scrollbar = false;
-    width = 40;
-    lines = 5;
-    separator = "solid";
+    terminal = "kitty";
+    # scrollbar = false;
+    # width = 40;
+    # lines = 5;
+    # separator = "solid";
     pass = {
       enable = true;
       stores = [ "${config.xdg.dataHome}/password-store" ];
@@ -64,7 +64,7 @@ in
         listview = {
           border = mkLiteral "0px 0px 0px";
           padding = mkLiteral "6px 0px 0px";
-          columns = 2;
+          # columns = 2;
         };
 
         "element" = {

@@ -8,7 +8,7 @@ in
     font = {
       package = (pkgs.nerdfonts.override { fonts = [ "Hack" ]; });
       name = "Hack Nerd Font";
-      size = 12;
+      size = 10;
     };
     keybindings = {
       "ctrl+c" = "copy_or_interrupt";
