@@ -16,15 +16,15 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
+    # FIXME: Pin until nixpkgs-wayland figures out that
+    # https://github.com/NixOS/nixpkgs/pull/143138 is a thing
+    # (already included in the git version)
+    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland?rev=b1c82141688b0e4b7174d2379ff8aa63c41a5864";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
     cachix.url = "github:cachix/cachix";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-
-    # Temporary until I get my repo merged into the NUR
-    toxic-nur.url = "/home/toxic/src/nur-pkgs/";
   };
 
   outputs = { self, home-manager, nixpkgs, ... } @ inputs: {
@@ -89,19 +89,10 @@
           }
           {
             nixpkgs.overlays = [
-              # inputs.nur.overlay
+              inputs.nur.overlay
               inputs.nixpkgs-wayland.overlay-egl
               inputs.emacs-overlay.overlay
               inputs.neovim-nightly-overlay.overlay
-
-              # This is also temporary
-              (final: prev: {
-                nur = import inputs.nur {
-                  nurpkgs = prev;
-                  pkgs = prev;
-                  repoOverrides = { toxic-nur = import inputs.toxic-nur { pkgs = prev; }; };
-                };
-              })
             ];
           }
         ];
