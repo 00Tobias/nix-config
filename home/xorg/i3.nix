@@ -35,6 +35,8 @@ in
     ];
   };
 
+  programs.feh.enable = true; # X image viewer
+
   services = {
     flameshot.enable = true;
   };

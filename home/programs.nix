@@ -1,6 +1,5 @@
 { config, pkgs, ... }: {
   programs = {
-    feh.enable = true; # X only
     mpv.enable = true; # Doesn't work on Wayland
     obs-studio.enable = true;
   };
@@ -19,7 +18,7 @@
     plover.dev
 
     # Creative
-    krita
+    krita-beta
     kdenlive
   ];
 }
