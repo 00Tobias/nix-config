@@ -66,6 +66,7 @@
                 ./emacs/emacs.nix
                 ./neovim/neovim.nix
                 ./home/programs.nix
+                ./home/langs.nix
                 ./home/scripts.nix
                 ./home/pass.nix
                 ./home/qutebrowser.nix
@@ -125,6 +126,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
+                ./home/langs.nix
                 ./home/scripts.nix
                 ./home/emacs.nix
                 ./home/pass.nix

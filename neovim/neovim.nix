@@ -80,8 +80,8 @@
       numb-nvim
       kommentary
       nvim-autopairs
-      pkgs.nur.repos.toxic-nur.vimPlugins.tabout-nvim
-      pkgs.nur.repos.toxic-nur.vimPlugins.nvim-parinfer
+      # tabout-nvim
+      # nvim-parinfer
 
       # Neovim as an IDE/Emacs replacement
       nvim-dap
@@ -112,31 +112,6 @@
       (ripgrep.override { withPCRE2 = true; })
       gnumake
       cmake
-
-      # Lua
-      luajit
-      sumneko-lua-language-server
-      luaformatter
-      fennel
-
-      # Nix
-      rnix-lsp
-      nixpkgs-fmt
-
-      # C
-      clang
-      ccls
-
-      # Rust
-      rust-analyzer
-      cargo
-      clippy
-      rustc
-      rustfmt
-
-      # Zig
-      zig
-      zls
     ];
 
     extraPython3Packages = (ps: with ps; [

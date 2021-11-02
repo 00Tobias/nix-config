@@ -85,46 +85,12 @@ in
       emacs-all-the-icons-fonts
       hack-font
 
-      ## Languages
-
-      # Nix
-      rnix-lsp
-      nixpkgs-fmt
-
-      # Fennel
-      fennel
-
-      # C
-      gnumake
-      cmake
-      clang
-      ccls
-
-      # Shell
-      shellcheck
-
-      # Common-lisp
-      sbcl
-
-      # Python
-      python3
+      # :langs python
       black
       pipenv
-      python-language-server
       python39Packages.pyflakes
       python39Packages.isort
       python39Packages.pytest
-
-      # Rust
-      rust-analyzer
-      cargo
-      clippy
-      rustc
-      rustfmt
-
-      # Zig
-      zig
-      zls
     ];
   };
 
