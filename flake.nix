@@ -77,6 +77,7 @@
                 ./home/kakoune/kakoune.nix
                 ./home/firefox/firefox.nix
                 ./home/wayland/sway.nix
+                ./home/wayland/waybar.nix
                 ./home/wayland/foot.nix
                 ./home/xorg/i3.nix
                 ./home/xorg/polybar.nix
@@ -139,6 +140,9 @@
                 ./home/xorg/rofi.nix
                 ./home/kakoune/kakoune.nix
                 ./home/firefox/firefox.nix
+                ./home/wayland/sway.nix
+                ./home/wayland/waybar.nix
+                ./home/wayland/foot.nix
                 ./home/xorg/dunst.nix
                 ./home/xorg/picom.nix
                 ./home/xorg/programs.nix
