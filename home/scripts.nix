@@ -1,12 +1,32 @@
 { config, pkgs, ... }: {
   # TODO: Maybe change this to source files from a ./scripts dir?
+  # FIXME: pkgs.writeShellScript is a way more elegant solution to this problem
+  # which would make this file redundant
   home = {
     sessionPath = [ "${config.home.homeDirectory}/scripts/" ];
     packages = with pkgs; [
+      # setwal.sh
       curl
       jq
+      feh
+      swaybg
     ];
     file = {
+      "scripts/kakd" = {
+        executable = true;
+        text = ''
+          server_name=$(basename `pwd`)
+          socket_file=$(kak -l | grep $server_name)
+
+          if [[ $socket_file == "" ]]; then
+              # Create new kakoune daemon for current dir
+              setsid kak -d -s $server_name &
+          fi
+
+          # and run kakoune (with any arguments passed to the script)
+          kak -c $server_name $@
+        '';
+      };
       "scripts/setwal.sh" = {
         executable = true;
         text = ''

@@ -67,13 +67,14 @@
                 ./neovim/neovim.nix
                 ./home/programs.nix
                 ./home/scripts.nix
-                ./home/kakoune.nix
                 ./home/pass.nix
                 ./home/qutebrowser.nix
                 ./home/firefox.nix
                 ./home/term.nix
                 ./home/gtk.nix
                 ./home/games.nix
+                ./home/kakoune/kakoune.nix
+                ./home/firefox/firefox.nix
                 ./home/wayland/sway.nix
                 ./home/wayland/foot.nix
                 ./home/xorg/i3.nix
@@ -126,16 +127,16 @@
               imports = [
                 ./home/scripts.nix
                 ./home/emacs.nix
-                ./home/kakoune.nix
                 ./home/pass.nix
                 ./home/qutebrowser.nix
-                ./home/firefox.nix
                 ./home/term.nix
                 ./home/gtk.nix
                 ./home/games.nix
                 ./home/xorg/i3.nix
                 ./home/xorg/polybar.nix
                 ./home/xorg/rofi.nix
+                ./home/kakoune/kakoune.nix
+                ./home/firefox/firefox.nix
                 ./home/xorg/dunst.nix
                 ./home/xorg/picom.nix
                 ./home/xorg/programs.nix

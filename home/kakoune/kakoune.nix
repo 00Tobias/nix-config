@@ -1,14 +1,16 @@
-{ lib, config, pkgs, ... }:
-let
-  colors = import ./colors.nix;
-in
-{
+{ lib, config, pkgs, ... }: {
   home.sessionVariables = {
-    EDITOR = "kcr edit";
-    VISUAL = "kcr edit";
+    EDITOR = "kak";
+    VISUAL = "kak";
   };
+
+  # Colorscheme based on my system colors
+  xdg.configFile."kak/colors/colors.kak" = {
+    text = import ./colors.nix { inherit lib; };
+  };
+
   programs = {
-    zsh.shellAliases = { k = "$EDITOR"; };
+    zsh.shellAliases = { k = "eval $EDITOR"; };
     direnv = {
       enable = true;
       nix-direnv = {
@@ -19,11 +21,13 @@ in
     kakoune = {
       enable = true;
       config = {
-        colorScheme = "one-dark";
-        ui = {
-          enableMouse = true;
-          assistant = "cat";
-        };
+        colorScheme = "colors";
+        # Commented out until home-manager gets with the times
+        # ui = {
+        #   enableMouse = true;
+        #   assistant = "cat";
+        # };
+        autoReload = "ask";
         scrollOff = {
           columns = 4;
           lines = 4;
@@ -60,28 +64,17 @@ in
             unmap window insert <s-tab> <c-p>";
           }
 
-          # Modeline
-          {
-            name = "WinDisplay";
-            option = ".*";
-            commands = "update-status";
-          }
-          {
-            name = "BufSetOption";
-            option = "lsp_diagnostic_error_count=.*";
-            commands = "update-status";
-          }
-          {
-            name = "BufSetOption";
-            option = "lsp_diagnostic_warning_count=.*";
-            commands = "update-status";
-          }
-
           # Language / buffer hooks
           {
             name = "WinSetOption";
             option = "filetype=(clojure|lisp|scheme|racket|fennel)";
             commands = "parinfer-enable-window -smart";
+          }
+          {
+            name = "BufSetOption";
+            group = "format";
+            option = "filetype=zig";
+            commands = ''set-option buffer formatcmd "zig fmt"'';
           }
           {
             name = "BufSetOption";
@@ -93,12 +86,6 @@ in
             name = "WinSetOption";
             option = "filetype=nix";
             commands = "set-option window indentwidth 2";
-          }
-          {
-            name = "BufSetOption";
-            group = "format";
-            option = "filetype=nix";
-            commands = ''set-option buffer formatcmd "nixpkgs-fmt"'';
           }
           {
             name = "WinSetOption";
@@ -129,11 +116,12 @@ in
           }
 
           # auto-pairs-kak
-          {
-            name = "WinCreate";
-            option = ".*";
-            commands = "auto-pairs-enable";
-          }
+          # FIXME: Doesn't work lol
+          # {
+          #   name = "WinCreate";
+          #   option = ".*";
+          #   commands = "auto-pairs-enable";
+          # }
 
           # kakboard
           {
@@ -152,8 +140,30 @@ in
           }
           {
             mode = "normal";
+            key = "Q";
+            effect = "<a-a>";
+          }
+          {
+            mode = "normal";
             key = "<c-q>";
             effect = "q";
+          }
+          {
+            mode = "normal";
+            key = "<c-Q>";
+            effect = "Q";
+          }
+
+          # Use <tab> for indenting with spaces
+          {
+            mode = "insert";
+            key = "<tab>";
+            effect = "<a-;><a-gt>";
+          }
+          {
+            mode = "insert";
+            key = "<s-tab>";
+            effect = "<a-;><a-lt>";
           }
 
           # Easier way to comment out code
@@ -179,68 +189,20 @@ in
             key = "f";
             effect = ": fzf-mode<ret>";
           }
-
-          # kakoune-surround
-          {
-            docstring = "surround";
-            mode = "user";
-            key = "s";
-            effect = ": enter-user-mode surround<ret>";
-          }
-          {
-            docstring = "surround";
-            mode = "surround";
-            key = "s";
-            effect = ":surround<ret>";
-          }
-          {
-            docstring = "change";
-            mode = "surround";
-            key = "c";
-            effect = ":change-surround<ret>";
-          }
-          {
-            docstring = "delete";
-            mode = "surround";
-            key = "d";
-            effect = ":delete-surround<ret>";
-          }
-          {
-            docstring = "select tag";
-            mode = "surround";
-            key = "t";
-            effect = ":select-surrounding-tag<ret>";
-          }
         ];
       };
-      extraConfig = with colors.theme; ''
-        # Statusbar
-        define-command update-status %{ evaluate-commands %sh{
-        printf %s 'set-option buffer modelinefmt %{'
-          if [ "$kak_opt_lsp_diagnostic_error_count" -ne 0 ]; then printf %s '{red+b}*%opt{lsp_diagnostic_error_count}{default} '; fi
-          if [ "$kak_opt_lsp_diagnostic_warning_count" -ne 0 ]; then printf %s '{yellow+b}!%opt{lsp_diagnostic_warning_count} {Whitespace}│{default} '; fi
-          printf %s ' {Whitespace}[{default}%sh{pwd | sed "s|^$HOME|~|"}{Whitespace}]{default}'
-          printf %s ' {Whitespace}[{default}%val{bufname}{comment}(%opt{filetype}){default}'
-          if [ -f "$kak_buffile" ] && [ ! -w "$kak_buffile" ]; then printf %s '{red}[]{default}'; fi
-          printf %s ' %val{cursor_line}{comment}:{default}%val{cursor_char_column}/%val{buf_line_count} {{context_info}} {{mode_info}}{Whitespace}]{default}'
-          printf %s " {Whitespace}[{default}{meta}$kak_client{comment}@{attribute}$kak_session{Whitespace}]{default}"
-          printf %s '}'
-        }}
+      extraConfig = ''
+        # Manually do what home-manager should
+        set-option global ui_options terminal_set_title=true terminal_status_on_top=true terminal_assistant=cat terminal_enable_mouse=true
 
         # Highlight TODO faces
         add-highlighter global/ regex \b(TODO|FIXME|NOTE)\b 0:default+rb
 
         # Use connect.kak
-        # require-module connect
-
-        # Use kakoune-fandt's bindings
-        require-module fandt
+        require-module connect
 
         # Require auto-pairs-kak module, probably deprecated when the plugin updates in nixpkgs
         require-module auto-pairs
-
-        # My one-dark background
-        face global Default default,rgb:${lib.removePrefix "#" background}
 
         # Add a command for spawning a floating terminal, as decided by my sway/i3 rules
         define-command floating-terminal -params .. %{
@@ -249,16 +211,13 @@ in
           }
         }
 
-        # kakoune-cr
-        evaluate-commands %sh{
-          kcr init kakoune
-        }
-
         # kak-lsp
 
+        # The kak-lsp wiki says this isn't needed, but it seems to be in my case
+        eval %sh{kak-lsp  --kakoune -s $kak_session}
+
         # Start kak-lsp based on filetype
-        eval %sh{kak-lsp --kakoune -s $kak_session}
-        hook global WinSetOption filetype=(c|cpp|racket|rust|python|go|lua|zig) %{
+        hook global WinSetOption filetype=(c|cpp|clojure|racket|rust|python|lua|zig) %{
           set-option window lsp_auto_highlight_references true
           set-option window lsp_hover_anchor false
           lsp-auto-hover-enable
@@ -266,14 +225,15 @@ in
           lsp-enable-window
         }
 
-        # FIXME: This is temporary
+        # rnix-lsp doesn't support textDocument/hover
         hook global WinSetOption filetype=nix %{
+          lsp-auto-hover-disable
           echo -debug "Enabling LSP for filtetype %opt{filetype}"
           lsp-enable-window
         }
 
         # Semantic tokens
-        hook global WinSetOption filetype=rust %{
+        hook global WinSetOption filetype=(clojure|rust|zig) %{
           hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
           hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
           hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
@@ -287,6 +247,18 @@ in
         define-command ee -docstring 'go to current error/warning from lsp' %{ lsp-find-error --include-warnings; lsp-find-error --previous --include-warnings }
 
         define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
+        
+        set-option global lsp_diagnostic_line_error_sign '║'
+        set-option global lsp_diagnostic_line_warning_sign '┊'
+
+        # Waybar as a statusline replacement
+
+        define-command mode-fifo %{ evaluate-commands %sh{
+            fifo=/tmp/kakoune/kak_mode
+            mkfifo "$fifo"
+            echo "{{mode_info}}" > "$fifo"
+          }
+        }
       '';
       plugins = with pkgs.kakounePlugins; [
         prelude-kak
@@ -296,34 +268,145 @@ in
         kakoune-rainbow
         auto-pairs-kak
         kakboard
-        pkgs.nur.repos.toxic-nur.kakounePlugins.kakoune-fandt
-        pkgs.nur.repos.toxic-nur.kakounePlugins.kakoune-surround
-        pkgs.nur.repos.toxic-nur.kakounePlugins.kakoune-wiki
-        pkgs.nur.repos.toxic-nur.kakounePlugins.one-kak
       ];
     };
   };
+  # Kakoune dependencies
   home.packages = with pkgs; [
-    # TODO: Change this into a seperate file like I did with colors.nix?
-    # So I can just include this in any editor and I don't need to add stuff more than one
-
-    # Kakoune dependencies
-    pkgs.nur.repos.toxic-nur.kakoune-cr
     kak-lsp
-    guile
+    guile # kakoune-rainbow
     git
     tig
     ranger
-
-    # Nix
-    rnix-lsp
-    nixpkgs-fmt
-
-    # Racket
-    racket-minimal
-
-    # Zig
-    zig
-    zls
   ];
+
+  # kak-lsp config
+  xdg.configFile."kak-lsp/kak-lsp.toml" = {
+    # TODO: 'toToml' an option here?
+    text = ''
+      snippet_support = false
+      verbosity = 2
+
+      [server]
+      timeout = 1800 # seconds = 30 minutes
+
+      [language.c_cpp]
+      filetypes = ["c", "cpp"]
+      roots = ["compile_commands.json", ".clangd", ".git", ".hg"]
+      command = "clangd"
+      offset_encoding = "utf-8"
+
+      [language.clojure]
+      filetypes = ["clojure"]
+      roots = ["project.clj", "deps.edn", ".git", ".hg"]
+      command = "clojure-lsp"
+
+      [language.lua]
+      filetypes = ["lua"]
+      roots = [".git", ".hg"]
+      command = "lua-language-server"
+      [language.lua.settings.Lua]
+      # See https://github.com/sumneko/vscode-lua/blob/master/setting/schema.json
+      # diagnostics.enable = true
+
+      [language.nix]
+      filetypes = ["nix"]
+      roots = ["flake.nix", "shell.nix", ".git", ".hg"]
+      command = "rnix-lsp"
+
+      [language.python]
+      filetypes = ["python"]
+      roots = ["requirements.txt", "setup.py", ".git", ".hg"]
+      command = "python-language-server"
+
+      # Install using 'raco pkg install racket-langserver'
+      [language.racket]
+      filetypes = ["racket", "scheme"]
+      roots = [".git", ".hg"]
+      command = "racket"
+      args = ["--lib", "racket-langserver"]
+
+      [language.rust]
+      filetypes = ["rust"]
+      roots = ["Cargo.toml"]
+      command = "rust-analyzer"
+      # command = "sh"
+      # args = [
+      #     "-c",
+      #     """
+      #         if path=$(rustup which rust-analyzer 2>/dev/null); then
+      #             "$path"
+      #         else
+      #             rust-analyzer
+      #         fi
+      #     """,
+      # ]
+
+      settings_section = "rust-analyzer"
+      [language.rust.settings.rust-analyzer]
+      hoverActions.enable = false # kak-lsp doesn't support this at the moment
+      # cargo.features = []
+      # See https://rust-analyzer.github.io/manual.html#configuration
+      # If you get 'unresolved proc macro' warnings, you have two options
+      # 1. The safe choice is two disable the warning:
+      # diagnostics.disabled = ["unresolved-proc-macro"]
+      # 2. Or you can opt-in for proc macro support
+      procMacro.enable = true
+      cargo.loadOutDirsFromCheck = true
+      # See https://github.com/rust-analyzer/rust-analyzer/issues/6448
+
+      [language.zig]
+      filetypes = ["zig"]
+      roots = ["build.zig"]
+      command = "zls"
+
+      # Semantic tokens
+      [[semantic_tokens]]
+      token = "comment"
+      face = "documentation"
+      modifiers = ["documentation"]
+
+      [[semantic_tokens]]
+      token = "comment"
+      face = "comment"
+
+      [[semantic_tokens]]
+      token = "function"
+      face = "function"
+
+      [[semantic_tokens]]
+      token = "keyword"
+      face = "keyword"
+
+      [[semantic_tokens]]
+      token = "namespace"
+      face = "module"
+
+      [[semantic_tokens]]
+      token = "operator"
+      face = "operator"
+
+      [[semantic_tokens]]
+      token = "string"
+      face = "string"
+
+      [[semantic_tokens]]
+      token = "type"
+      face = "type"
+
+      [[semantic_tokens]]
+      token = "variable"
+      face = "default+d"
+      modifiers = ["readonly"]
+
+      [[semantic_tokens]]
+      token = "variable"
+      face = "default+d"
+      modifiers = ["constant"]
+
+      [[semantic_tokens]]
+      token = "variable"
+      face = "variable"
+    '';
+  };
 }
