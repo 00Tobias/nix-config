@@ -116,6 +116,13 @@
           }
 
           # auto-pairs-kak
+          {
+            name = "WinCreate";
+            option = ".*";
+            commands = "rainbow";
+          }
+
+          # auto-pairs-kak
           # FIXME: Doesn't work lol
           # {
           #   name = "WinCreate";
@@ -204,6 +211,9 @@
         # Require auto-pairs-kak module, probably deprecated when the plugin updates in nixpkgs
         require-module auto-pairs
 
+        # Require rainbow
+        require-module rainbow
+
         # Add a command for spawning a floating terminal, as decided by my sway/i3 rules
         define-command floating-terminal -params .. %{
           nop %sh{
@@ -221,6 +231,7 @@
           set-option window lsp_auto_highlight_references true
           set-option window lsp_hover_anchor false
           lsp-auto-hover-enable
+          lsp-inlay-diagnostics-enable window
           echo -debug "Enabling LSP for filtetype %opt{filetype}"
           lsp-enable-window
         }
@@ -228,6 +239,7 @@
         # rnix-lsp doesn't support textDocument/hover
         hook global WinSetOption filetype=nix %{
           lsp-auto-hover-disable
+          lsp-inlay-diagnostics-enable window
           echo -debug "Enabling LSP for filtetype %opt{filetype}"
           lsp-enable-window
         }
@@ -250,6 +262,9 @@
         
         set-option global lsp_diagnostic_line_error_sign '║'
         set-option global lsp_diagnostic_line_warning_sign '┊'
+
+        # The max height of the lsp hover window
+        set global lsp_hover_max_lines 20
 
         # Waybar as a statusline replacement
 
