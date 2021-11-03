@@ -207,6 +207,8 @@ in
               gsettings set "$gnome_schema" font-name "$font_name"
             ''}";
           }
+          # Start kdeconnect
+          { command = "kdeconnect-cli -l"; }
         ];
       };
       extraOptions = [ "--unsupported-gpu" ]; # "--verbose" "--debug"
