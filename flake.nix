@@ -112,8 +112,6 @@
           ./modules/pipewire.nix
           ./modules/syncthing.nix
           ./modules/yubikey.nix
-          ./modules/firejail.nix
-          ./modules/unfree.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -125,11 +123,8 @@
                 ./home/langs.nix
                 ./home/scripts.nix
                 ./home/pass.nix
-                ./home/qutebrowser.nix
-                ./home/spotify.nix
                 ./home/term.nix
                 ./home/gtk.nix
-                ./home/games.nix
                 ./home/kakoune/kakoune.nix
                 ./home/firefox/firefox.nix
                 ./home/wayland/sway.nix
