@@ -9,6 +9,5 @@
     freetube
     ripcord
     discord # For backup
-    lunar-client
   ];
 }
