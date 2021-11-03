@@ -65,11 +65,11 @@
               imports = [
                 ./emacs/emacs.nix
                 ./neovim/neovim.nix
-                ./nyxt/nyxt.nix
                 ./home/programs.nix
                 ./home/langs.nix
                 ./home/scripts.nix
                 ./home/pass.nix
+                ./home/nyxt.nix
                 ./home/qutebrowser.nix
                 ./home/discord.nix
                 ./home/spotify.nix
