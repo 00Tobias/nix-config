@@ -1,10 +1,9 @@
 #+TITLE:  Literate config for my editor
+#+AUTHOR: Toxic
 #+STARTUP: overview
 
-* My config of the Doom framework for the Emacs Operating system
 * Multimedia
 ** EMMS
-
 *** TODO
 
 ** Eva
@@ -17,6 +16,21 @@ An "Emacs based Virtual Assistant"
 #+begin_src emacs-lisp :tangle config.el
 (use-package! eva)
 #+end_src
+
+** emacs-webkit
+Full-fledged browser in Emacs
+#+begin_src emacs-lisp :tangle no
+(package! webkit
+  :recipe (:host github :repo "akirakyle/emacs-webkit"
+           :branch "main"
+           :files (:defaults "*.js" "*.css" "*.so")
+           :pre-build ("make")))
+#+end_src
+#+begin_src emacs-lisp :tangle no
+(use-package! webkit)
+(use-package! webkit-ace)
+#+end_src
+
 ** Elpher
 drew devault sim
 #+begin_src emacs-lisp :tangle packages.el
@@ -25,104 +39,36 @@ drew devault sim
 #+begin_src emacs-lisp :tangle config.el
 (use-package! elpher)
 #+end_src
+
 * Bindings
-** Kakoune
-This doesn't tangle into config.el, I currently use Evil mode.
-I do wish this package was more polished though...
-  #+begin_src emacs-lisp :tangle no
-
-(defun last-in-word ()
-   (interactive)
-   (forward-word)
-   (backward-char))
-
-(use-package! kakoune
-  :commands ryo-modal-mode
-  ;; Having a non-chord way to escape is important, since key-chords don't work in macros
-  :bind (("C-z" . ryo-modal-mode)
-         ("<escape>" . ryo-enter))
-  :hook
-  (after-init . my/kakoune-setup)
-  ((prog-mode text-mode) . ryo-enter)
-
+** Boon
+#+begin_src emacs-lisp :tangle no
+(package! boon)
+#+end_src
+#+begin_src emacs-lisp :tangle no
+(use-package! boon-qwerty
+  :init
+  (boon-mode)
   :config
-  (defun ryo-enter () "Enter normal mode" (interactive) (ryo-modal-mode 1))
+  (define-key boon-moves-map "ö"  'boon-smarter-forward))
+#+end_src
 
-  (defun my/kakoune-setup ()
-      "Call kakoune-setup-keybinds and then add some personal config."
-      (kakoune-setup-keybinds)
-
-      ;; Cursor config
-      (setq-default cursor-type '(bar . 1))
-      (setq ryo-modal-cursor-type 'box)
-      (setq ryo-modal-cursor-color "#ffffff")
-      (setq ryo-modal-default-cursor-color "#ffffff")
-
-      (define-key ryo-modal-mode-map (kbd "SPC h") 'help-command)
-      (define-key ryo-modal-mode-map (kbd "z") ctl-x-map)
-
-      (ryo-modal-keys
-       ("," save-buffer)
-       ("e" last-in-word :first '(kakoune-set-mark-here))
-       ("E" last-in-word :first '(kakoune-set-mark-if-inactive))
-       ("P" counsel-yank-pop)
-       ("m" mc/mark-next-like-this)
-       ("M" mc/skip-to-next-like-this)
-       ("n" mc/mark-previous-like-this)
-       ("N" mc/skip-to-previous-like-this)
-       ("M-m" mc/edit-lines)
-       ("*" mc/mark-all-like-this)
-       ("v" er/expand-region)
-       ("C-v" set-rectangular-region-anchor)
-       ("M-s" mc/split-region)
-       (";" (("q" delete-window)
-             ("v" split-window-horizontally)
-             ("s" split-window-vertically)))
-       ("C-w h" windmove-left)
-       ("C-w j" windmove-down)
-       ("C-w k" windmove-up)
-       ("C-w l" windmove-right)
-       ("C-u" scroll-down-command :first '(deactivate-mark))
-       ("C-d" scroll-up-command :first '(deactivate-mark)))))
-  (ryo-modal-mode)
-
-;; This overrides the default mark-in-region with a prettier-looking one,
-;; and provides a couple extra commands
-(use-package! visual-regexp
-  :ryo
-  ("s" vr/mc-mark)
-  ("?" vr/replace)
-  ("M-/" vr/query-replace))
-
-;; Emacs incremental search doesn't work with multiple cursors, but this fixes that
-(use-package! phi-search
-  :bind (("C-s" . phi-search)
-         ("C-r" . phi-search-backward)))
-
-;; Probably the first thing you'd miss is undo and redo, which requires an extra package
-;; to work like it does in kakoune (and almost every other editor).
-(use-package! undo-tree
+** Symex
+#+begin_src emacs-lisp :tangle no
+(package! symex)
+#+end_src
+#+begin_src emacs-lisp :tangle no
+(use-package! symex
   :config
-  (global-undo-tree-mode)
-  (undo-tree-mode)
-  :ryo
-  ("u" undo-tree-undo)
-  ("U" undo-tree-redo)
-  ("SPC u" undo-tree-visualize)
-  :bind (:map undo-tree-visualizer-mode-map
-              ("h" . undo-tree-visualize-switch-branch-left)
-              ("j" . undo-tree-visualize-redo)
-              ("k" . undo-tree-visualize-undo)
-              ("l" . undo-tree-visualize-switch-branch-right)))
-  #+end_src
+  (symex-initialize))
+#+end_src
 
 * User Interface
-    Fairly self-explanatory, just some UI hacks to fix things up a little.
 ** Font
-    Speaking of Hacks
-    #+begin_src emacs-lisp :tangle config.el
+ Set the font
+ #+begin_src emacs-lisp :tangle config.el
 (setq doom-font (font-spec :family "Hack" :size 12))
-    #+end_src
+ #+end_src
 
 ** Theme
 Uses my custom theme in =themes=
@@ -131,11 +77,11 @@ Uses my custom theme in =themes=
 #+end_src
 
 ** Line numbers
-    #+begin_src emacs-lisp :tangle config.el
-(setq display-line-numbers-type 'visual)
-    #+end_src
+#+begin_src emacs-lisp :tangle config.el
+(setq display-line-numbers-type 't)
+#+end_src
 
-* Lang
+* Programming
 ** Tree sitter
 #+begin_src emacs-lisp :tangle packages.el
 (package! tree-sitter)
@@ -155,27 +101,17 @@ Uses my custom theme in =themes=
   (add-to-list 'tree-sitter-major-mode-language-alist '(zig-mode . zig)))
 #+end_src
 
-** Symex
-#+begin_src emacs-lisp :tangle no
-(package! symex)
+** howdoyou
+Stackoverflow answers in Emacs
+#+begin_src emacs-lisp :tangle packages.el
+(package! howdoyou)
 #+end_src
-
-#+begin_src emacs-lisp :tangle no
-(use-package! symex
-  :config
-  (symex-initialize))
-#+end_src
-
-** Elisp
-Use lsp in config.org
-https://github.com/hlissner/doom-emacs/issues/4526 is merged
 #+begin_src emacs-lisp :tangle config.el
-(defun org-babel-edit-prep:elisp (babel-info)
-  (setq-local buffer-file-name (->> babel-info caddr (alist-get :tangle)))
-  (lsp))
+(use-package! howdoyou)
 #+end_src
 
-** Nix
+** Langs
+*** Nix
 Currently doom emacs uses nixfmt, I prefer nixpkgs-fmt to it.
 This should be available as a module in Doom once
 https://github.com/hlissner/doom-emacs/issues/4526 is merged
@@ -193,3 +129,12 @@ Doom doesn't have a `+lsp` flag for :nix
 (add-hook 'nix-mode-local-vars-hook #'lsp!)
 #+end_src
 * Misc
+** Fireplace
+Keeps me warm during the cold winter nights
+#+begin_src emacs-lisp :tangle packages.el
+(package! fireplace)
+#+end_src
+#+begin_src emacs-lisp :tangle config.el
+(use-package! fireplace)
+#+end_src
+

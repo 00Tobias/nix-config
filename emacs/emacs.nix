@@ -13,19 +13,14 @@ let
     "go"
     "haskell"
     "html"
-    "java"
-    "javascript"
     "json"
     "latex"
     "lua"
-    "markdown"
     "nix"
     "python"
     "ruby"
     "rust"
     "toml"
-    "typescript"
-    "vim"
     "yaml"
     "zig"
   ];
@@ -75,11 +70,8 @@ in
       ]))
 
       wordnet # :lookup
-      languagetool # :grammar
-      libvterm # :vterm
+      languagetool # :checkers grammar
       editorconfig-core-c # :editorconfig
-
-      # discount # Markdown
 
       # Fonts
       emacs-all-the-icons-fonts
@@ -96,6 +88,7 @@ in
 
   programs.emacs = {
     enable = true;
+    extraPackages = epkgs: [ epkgs.vterm ]; # :term vterm
     package = pkgs.emacsPgtkGcc;
   };
 

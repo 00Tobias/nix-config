@@ -3,29 +3,24 @@
 (doom! :input
        :completion
        (company +childframe)
-       ;; (ivy +fuzzy +prescient +icons)
        (vertico +icons)
 
        :ui
        doom
-       doom-dashboard
-       doom-quit
        hl-todo
        indent-guides
        modeline
        ophints
        (popup +defaults)
-       tabs
        (treemacs +lsp)
        vc-gutter
        window-select
 
        :editor
-       (evil +everywhere)
        file-templates
-       fold
        (format +onsave)
        multiple-cursors
+       objed
        (parinfer +rust)
        snippets
 
@@ -33,7 +28,7 @@
        (dired +icons)
        electric
        (ibuffer +icons)
-       (undo +tree)
+       undo
        vc
 
        :term
@@ -64,9 +59,8 @@
        emacs-lisp
        json
        (lua +lsp +fennel)
-       (markdown +grip)
        nix
-       (org +pretty)
+       (org +brain +dragndrop +pandoc +pretty +roam2)
        (python +lsp)
        (rust +lsp)
        (sh +lsp)
@@ -77,7 +71,6 @@
        :app
        calendar
        emms
-       twitter
 
        :config
        literate
