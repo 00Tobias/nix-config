@@ -16,10 +16,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    # FIXME: Pin until nixpkgs-wayland figures out that
-    # https://github.com/NixOS/nixpkgs/pull/143138 is a thing
-    # (already included in the git version)
-    nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland?rev=b1c82141688b0e4b7174d2379ff8aa63c41a5864";
     nur.url = "github:nix-community/NUR";
     home-manager.url = "github:nix-community/home-manager";
     cachix.url = "github:cachix/cachix";
@@ -93,7 +89,6 @@
           {
             nixpkgs.overlays = [
               inputs.nur.overlay
-              inputs.nixpkgs-wayland.overlay-egl
               inputs.emacs-overlay.overlay
               inputs.neovim-nightly-overlay.overlay
             ];
@@ -137,7 +132,6 @@
           {
             nixpkgs.overlays = [
               inputs.nur.overlay
-              inputs.nixpkgs-wayland.overlay
               inputs.emacs-overlay.overlay
               inputs.neovim-nightly-overlay.overlay
             ];
