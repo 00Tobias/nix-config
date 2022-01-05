@@ -5,7 +5,6 @@
   home = {
     sessionPath = [ "${config.home.homeDirectory}/scripts/" ];
     packages = with pkgs; [
-      # setwal.sh
       curl
       jq
       feh
@@ -32,11 +31,14 @@
         text = ''
           #!/usr/bin/env bash
 
+          # Make the dir if it doesn't exist
+          mkdir -p /tmp/wallpapers
+
           # Clean the dir
           rm -f /tmp/wallpapers/*
           
           curl -s -H "User-Agent: cli:bash:v0.0.0" \
-            https://www.reddit.com/r/wallpaper/top/.json \
+            https://www.reddit.com/r/wallpaper/top/.json?t=week \
             | jq '.data.children[].data.url' \
             | sed '/.jpeg\|.jpg\|.png\|.webp/!d' \
             | head -1 \
