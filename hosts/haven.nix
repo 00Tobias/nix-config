@@ -21,11 +21,13 @@
 
   networking = {
     interfaces.enp2s0.useDHCP = true;
-    interfaces.wlp0s20f3.useDHCP = true;
+    interfaces.wlan0.useDHCP = true;
 
-    # wireless = {
-    #   enable = true;
-    # };
+    wireless.iwd.enable = true;
+    networkmanager = {
+      enable = true;
+      wifi.backend = "iwd";
+    };
 
     hostName = "haven";
     hostId = "27cefd8d"; # Required by ZFS
