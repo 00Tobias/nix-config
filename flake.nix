@@ -32,6 +32,7 @@
         modules = [
           ./hosts/common.nix
           ./hosts/den.nix
+          ./modules/xorg.nix
           ./modules/doas.nix
           ./modules/kdeconnect.nix
           ./modules/mullvad.nix
@@ -87,8 +88,8 @@
         modules = [
           ./hosts/common.nix
           ./hosts/haven.nix
+          ./modules/wayland.nix
           ./modules/doas.nix
-          ./modules/kdeconnect.nix
           ./modules/mullvad.nix
           ./modules/nextdns.nix
           ./modules/pipewire.nix
@@ -104,9 +105,10 @@
                 ./home/programs.nix
                 ./home/langs.nix
                 ./home/scripts.nix
-                ./home/pass.nix
                 ./home/term.nix
                 ./home/gtk.nix
+                ./home/nyxt/nyxt.nix
+                ./home/pass.nix
                 ./home/kakoune/kakoune.nix
                 ./home/firefox/firefox.nix
                 ./home/wayland/sway.nix
