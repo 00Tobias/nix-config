@@ -1,8 +1,9 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 let
   colors = import ../colors.nix;
 in
 {
+  home.packages = [ (pkgs.nerdfonts.override { fonts = [ "Hack" ]; }) ];
   programs.waybar = {
     enable = true;
     systemd.enable = true;
@@ -11,26 +12,21 @@ in
         layer = "top";
         position = "top";
         height = 37;
-        # output = [
-        #   "eDP-1"
-        #   "HDMI-A-1"
-        # ];
         modules-left = [ "custom/nixos" "sway/workspaces" ];
         modules-center = [ "sway/window" ];
-        modules-right = [ "cpu" "memory" "pulseaudio" "clock" ];
+        modules-right = [ "cpu" "memory" "network" "battery" "backlight" "pulseaudio" "clock" ];
         modules = {
           "custom/nixos" = {
-              format = " ";
-            };
+            format = " ";
+          };
           "sway/workspaces" = {
             all-outputs = false;
             disable-scroll-wraparound = true;
             enable-bar-scroll = true;
           };
           "sway/window" = {
-            max-length = 50;
+            max-length = 60;
             rewrite = {
-              "(.*) - Mozilla Firefox" = " $1";
               "(.*) - foot" = " $1";
               "foot" = " ";
               "(.*) - Kakoune" = "Kakoune";
@@ -41,6 +37,46 @@ in
           };
           "memory" = {
             format = " {}%";
+          };
+          "network" = {
+            format-wifi = "直 {essid}";
+            format-ethernet = " {ifname}";
+            format-disconnected = " Disconnected";
+            tooltip-format = "{ipaddr}";
+          };
+          "battery" = {
+            format = "ﮣ{icon} {capacity}%";
+            format-discharging = "{icon} {capacity}%";
+            states = {
+              warning = "30";
+              critical = "15";
+            };
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
+          };
+          "pulseaudio" = {
+            format = "{icon} {volume}%";
+            format-source-muted = "婢";
+            format-icons = {
+              headphone = " ";
+              headset = " ";
+              hdmi = "﴿";
+              default = [
+                "奄"
+                "奔"
+                "墳"
+              ];
+            };
           };
           "clock" = {
             format = " {:%H:%M}";
@@ -65,12 +101,12 @@ in
       #workspaces,
       #window,
       #cpu,
-      #keyboard-state,
       #memory,
+      #battery,
       #temperature,
       #clock,
-      #pulseaudio,
       #backlight,
+      #pulseaudio,
       #battery,
       #network {
         background-color: ${lighterBlack};
@@ -103,6 +139,18 @@ in
 
       #memory {
         color: ${magenta};
+      }
+
+      #battery {
+          color: ${green};
+      }
+
+      #battery.warning {
+          color: ${orange};
+      }
+
+      #battery.critical {
+          color: ${red};
       }
 
       #clock {
