@@ -32,23 +32,26 @@ in
       wrapperFeatures.gtk = true;
       config = with colors.theme; {
         input = {
-          "*" = {
+          "type:keyboard" = {
             xkb_layout = "se";
+          };
+          "type:touchpad" = {
+            tap = "enabled";
+            natural_scroll = "enabled";
+            middle_emulation = "enabled";
           };
         };
         output = {
-          "*" = {
-            bg = "/tmp/wallpapers/* fill";
-          };
           HDMI-A-2 = { transform = "90"; };
         };
         seat = {
           "*" = {
             hide_cursor = "8000";
-          };
-          "seat0" = {
             xcursor_theme = "capitaine-cursors";
           };
+          # "seat0" = {
+          #   xcursor_theme = "capitaine-cursors";
+          # };
         };
         modifier = "Mod4";
         focus.mouseWarping = false;
@@ -207,7 +210,6 @@ in
               gsettings set "$gnome_schema" font-name "$font_name"
             ''}";
           }
-          # Start kdeconnect
           { command = "kdeconnect-cli -l"; }
         ];
       };
