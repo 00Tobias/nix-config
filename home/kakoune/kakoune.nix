@@ -1,12 +1,78 @@
-{ lib, config, pkgs, ... }: {
+{ lib, config, pkgs, ... }:
+let
+  # More recently updated plugins, plus some not in nixpkgs
+  fzf-kak = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "fzf-kak";
+    version = "2021-09-11";
+    src = pkgs.fetchFromGitHub {
+      owner = "andreyorst";
+      repo = "fzf.kak";
+      rev = "68f21eb78638e5a55027f11aa6cbbaebef90c6fb";
+      sha256 = "12zfvyxqgy18l96sg2xng20vfm6b9py6bxmx1rbpbpxr8szknyh6";
+    };
+  };
+  kakboard = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "kakboard";
+    version = "2020-05-08";
+    src = pkgs.fetchFromGitHub {
+      owner = "lePerdu";
+      repo = "kakboard";
+      rev = "2f13f5cd99591b76ad5cba230815b80138825120";
+      sha256 = "1kvnbsv20y09rlnyar87qr0h26i16qsq801krswvxcwhid7ijlvd";
+    };
+  };
+  kakoune-snippets = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "kakoune-snippets";
+    version = "2021-07-18";
+    src = pkgs.fetchFromGitHub {
+      owner = "occivink";
+      repo = "kakoune-snippets";
+      rev = "c0c39eda2e8f9608cbc0372583bf76441a24afd9";
+      sha256 = "12q32ahxvmi82f8jlx24xpd61vlnqf14y78ahj1381rv61a386mv";
+    };
+  };
+  kakoune-snippet-collection = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "kakoune-snippet-collection";
+    version = "2021-10-15";
+    src = pkgs.fetchFromGitHub {
+      owner = "andreyorst";
+      repo = "kakoune-snippet-collection";
+      rev = "8cd0329f3f93d30d0507564eaf311b433a404213";
+      sha256 = "0h3cc0aq5yv8c26jxmnfcg0pib01qbwxv1sb0dlq3zgwafpvbmjy";
+    };
+  };
+  kakoune-repl-buffer = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "kakoune-repl-buffer";
+    version = "2021-01-22";
+    src = pkgs.fetchFromGitLab {
+      owner = "Screwtapello";
+      repo = "kakoune-repl-buffer";
+      rev = "473192d3e7875142a25b607cdb20af2a5c2d4b47";
+      sha256 = "007pzhmgr8wbrmn8a8hsbxhafndxqhscw2xx5jqfg0xdakp72dpf";
+    };
+  };
+  kak-rainbow = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "kak-rainbow";
+    version = "2020-08-31";
+    src = pkgs.fetchFromGitHub {
+      owner = "Bodhizafa";
+      repo = "kak-rainbow";
+      rev = "9c3d0aa62514134ee5cb86e80855d9712c4e8c4b";
+      sha256 = "0mqghysiwi1h0hx96c7bq0a16yrxh65f3v8bqqn5bh9x1zh2l9mg";
+    };
+  };
+in
+{
   home.sessionVariables = {
     EDITOR = "kak";
     VISUAL = "kak";
   };
 
   # Colorscheme based on my system colors
-  xdg.configFile."kak/colors/colors.kak" = {
-    text = import ./colors.nix { inherit lib; };
+  xdg.configFile = {
+    "kak/colors/colors.kak" = {
+      text = import ./colors.nix { inherit lib; };
+    };
   };
 
   programs = {
@@ -15,283 +81,30 @@
       enable = true;
       nix-direnv = {
         enable = true;
-        enableFlakes = true;
       };
     };
     kakoune = {
       enable = true;
-      config = {
-        colorScheme = "colors";
-        # Commented out until home-manager gets with the times
-        # ui = {
-        #   enableMouse = true;
-        #   assistant = "cat";
-        # };
-        autoReload = "ask";
-        scrollOff = {
-          columns = 4;
-          lines = 4;
-        };
-        hooks = [
-          # Relative line numbers based on mode
-          {
-            name = "WinCreate";
-            option = ".*";
-            commands = "add-highlighter -override global/line-numbers number-lines -relative -hlcursor";
-          }
-          {
-            name = "ModeChange";
-            option = "push:.*:insert";
-            commands = "add-highlighter -override global/line-numbers number-lines -hlcursor";
-          }
-          {
-            name = "ModeChange";
-            option = "pop:insert:.*";
-            commands = "add-highlighter -override global/line-numbers number-lines -relative -hlcursor";
-          }
-
-          # Tab to complete in insert mode
-          {
-            name = "InsertCompletionShow";
-            option = ".*";
-            commands = "try %{ map window insert <tab> <c-n>
-            map window insert <s-tab> <c-p> }";
-          }
-          {
-            name = "InsertCompletionHide";
-            option = ".*";
-            commands = "unmap window insert <tab> <c-n>
-            unmap window insert <s-tab> <c-p>";
-          }
-
-          # Language / buffer hooks
-          {
-            name = "WinSetOption";
-            option = "filetype=(clojure|lisp|scheme|racket|fennel)";
-            commands = "parinfer-enable-window -smart";
-          }
-          {
-            name = "BufSetOption";
-            group = "format";
-            option = "filetype=zig";
-            commands = ''set-option buffer formatcmd "zig fmt"'';
-          }
-          {
-            name = "BufSetOption";
-            group = "format";
-            option = "filetype=nix";
-            commands = ''set-option buffer formatcmd "nixpkgs-fmt"'';
-          }
-          {
-            name = "WinSetOption";
-            option = "filetype=nix";
-            commands = "set-option window indentwidth 2";
-          }
-          {
-            name = "WinSetOption";
-            option = "filetype=git-commit";
-            commands = "%{ set window autowrap_column 72
-            autowrap-enable }";
-          }
-
-          # wayland terminal
-          {
-            name = "ModuleLoaded";
-            option = "wayland";
-            commands = "set-option global termcmd 'foot sh -c'";
-          }
-
-          # fzf-kak
-          {
-            name = "ModuleLoaded";
-            option = "fzf";
-            commands = ''set-option global fzf_terminal_command 'floating-terminal kak -c %val{session} -e "%arg{@}"' '';
-          }
-
-          # kak-lsp
-          {
-            name = "KakEnd";
-            option = ".*";
-            commands = "lsp-exit";
-          }
-
-          # auto-pairs-kak
-          {
-            name = "WinCreate";
-            option = ".*";
-            commands = "rainbow";
-          }
-
-          # auto-pairs-kak
-          # FIXME: Doesn't work lol
-          # {
-          #   name = "WinCreate";
-          #   option = ".*";
-          #   commands = "auto-pairs-enable";
-          # }
-
-          # kakboard
-          {
-            name = "WinCreate";
-            option = ".*";
-            commands = "kakboard-enable";
-          }
-        ];
-
-        keyMappings = [
-          # I don't really use macros in kakoune
-          {
-            mode = "normal";
-            key = "q";
-            effect = "<a-i>";
-          }
-          {
-            mode = "normal";
-            key = "Q";
-            effect = "<a-a>";
-          }
-          {
-            mode = "normal";
-            key = "<c-q>";
-            effect = "q";
-          }
-          {
-            mode = "normal";
-            key = "<c-Q>";
-            effect = "Q";
-          }
-
-          # Use <tab> for indenting with spaces
-          {
-            mode = "insert";
-            key = "<tab>";
-            effect = "<a-;><a-gt>";
-          }
-          {
-            mode = "insert";
-            key = "<s-tab>";
-            effect = "<a-;><a-lt>";
-          }
-
-          # Easier way to comment out code
-          {
-            docstring = "comment-line";
-            mode = "user";
-            key = "c";
-            effect = ": comment-line<ret>";
-          }
-
-          # kak-lsp
-          {
-            docstring = "lsp";
-            mode = "user";
-            key = "l";
-            effect = ": enter-user-mode lsp<ret>";
-          }
-
-          # fzf-kak
-          {
-            docstring = "fzf";
-            mode = "user";
-            key = "f";
-            effect = ": fzf-mode<ret>";
-          }
-        ];
-      };
-      extraConfig = ''
-        # Manually do what home-manager should
-        set-option global ui_options terminal_set_title=true terminal_status_on_top=true terminal_assistant=cat terminal_enable_mouse=true
-
-        # Highlight TODO faces
-        add-highlighter global/ regex \b(TODO|FIXME|NOTE)\b 0:default+rb
-
-        # Use connect.kak
-        require-module connect
-
-        # Require auto-pairs-kak module, probably deprecated when the plugin updates in nixpkgs
-        require-module auto-pairs
-
-        # Require rainbow
-        require-module rainbow
-
-        # Add a command for spawning a floating terminal, as decided by my sway/i3 rules
-        define-command floating-terminal -params .. %{
-          nop %sh{
-            nohup foot -T "floating-terminal" "$@" < /dev/null > /dev/null 2>&1 &
-          }
-        }
-
-        # kak-lsp
-
-        # The kak-lsp wiki says this isn't needed, but it seems to be in my case
-        eval %sh{kak-lsp  --kakoune -s $kak_session}
-
-        # Start kak-lsp based on filetype
-        hook global WinSetOption filetype=(c|cpp|clojure|racket|rust|python|lua|zig) %{
-          set-option window lsp_auto_highlight_references true
-          set-option window lsp_hover_anchor false
-          lsp-auto-hover-enable
-          lsp-inlay-diagnostics-enable window
-          echo -debug "Enabling LSP for filtetype %opt{filetype}"
-          lsp-enable-window
-        }
-
-        # rnix-lsp doesn't support textDocument/hover
-        hook global WinSetOption filetype=nix %{
-          lsp-auto-hover-disable
-          lsp-inlay-diagnostics-enable window
-          echo -debug "Enabling LSP for filtetype %opt{filetype}"
-          lsp-enable-window
-        }
-
-        # Semantic tokens
-        hook global WinSetOption filetype=(clojure|rust|zig) %{
-          hook window -group semantic-tokens BufReload .* lsp-semantic-tokens
-          hook window -group semantic-tokens NormalIdle .* lsp-semantic-tokens
-          hook window -group semantic-tokens InsertIdle .* lsp-semantic-tokens
-          hook -once -always window WinSetOption filetype=.* %{
-            remove-hooks window semantic-tokens
-          }
-        }
-
-        define-command ne -docstring 'go to next error/warning from lsp' %{ lsp-find-error --include-warnings }
-        define-command pe -docstring 'go to previous error/warning from lsp' %{ lsp-find-error --previous --include-warnings }
-        define-command ee -docstring 'go to current error/warning from lsp' %{ lsp-find-error --include-warnings; lsp-find-error --previous --include-warnings }
-
-        define-command lsp-restart -docstring 'restart lsp server' %{ lsp-stop; lsp-start }
-        
-        set-option global lsp_diagnostic_line_error_sign '║'
-        set-option global lsp_diagnostic_line_warning_sign '┊'
-
-        # The max height of the lsp hover window
-        set global lsp_hover_max_lines 20
-
-        # Waybar as a statusline replacement
-
-        define-command mode-fifo %{ evaluate-commands %sh{
-            fifo=/tmp/kakoune/kak_mode
-            mkfifo "$fifo"
-            echo "{{mode_info}}" > "$fifo"
-          }
-        }
-      '';
+      extraConfig = builtins.readFile ./config.kak;
       plugins = with pkgs.kakounePlugins; [
-        prelude-kak
-        connect-kak
+        parinfer-rust # Builds a Rust package
+
+        # Personally defined plugins
         fzf-kak
-        parinfer-rust
-        kakoune-rainbow
-        auto-pairs-kak
         kakboard
+        kakoune-snippets
+        kakoune-snippet-collection
+        kakoune-repl-buffer
+        kak-rainbow
       ];
     };
   };
   # Kakoune dependencies
   home.packages = with pkgs; [
     kak-lsp
-    guile # kakoune-rainbow
+    perl # kakoune-snippets
     git
-    tig
+    lazygit
     ranger
   ];
 

@@ -19,7 +19,7 @@ with colors.theme; ''
   face global keyword "rgb:${lib.removePrefix "#" magenta}"
   face global operator "rgb:${lib.removePrefix "#" foreground}"
   face global attribute "rgb:${lib.removePrefix "#" magenta}"
-  face global comment "rgb:${lib.removePrefix "#" darkGrey}"
+  face global comment "rgb:${lib.removePrefix "#" lightGrey}"
   face global documentation "rgb:${lib.removePrefix "#" darkGrey}"
   face global meta "rgb:${lib.removePrefix "#" foreground}"
   face global builtin "rgb:${lib.removePrefix "#" yellow}"
