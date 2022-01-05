@@ -17,10 +17,11 @@
        window-select
 
        :editor
+       (evil +everywhere)
        file-templates
        (format +onsave)
        multiple-cursors
-       objed
+       ;; objed
        (parinfer +rust)
        snippets
 
@@ -28,7 +29,7 @@
        (dired +icons)
        electric
        (ibuffer +icons)
-       undo
+       (undo +tree)
        vc
 
        :term
@@ -67,6 +68,7 @@
        (zig +lsp)
 
        :email
+       (mu4e +org)
 
        :app
        calendar

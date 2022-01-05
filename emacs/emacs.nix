@@ -73,6 +73,10 @@ in
       languagetool # :checkers grammar
       editorconfig-core-c # :editorconfig
 
+      # :email mu4e
+      mu
+      isync
+
       # Fonts
       emacs-all-the-icons-fonts
       hack-font
