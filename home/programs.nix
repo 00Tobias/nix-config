@@ -1,20 +1,11 @@
 { config, pkgs, ... }: {
   programs = {
-    mpv.enable = true; # Doesn't work on Wayland
+    mpv.enable = true;
     obs-studio.enable = true;
   };
 
   home.packages = with pkgs; [
-    # Thunar
-    xfce.thunar
-    xfce.thunar-archive-plugin
-    xfce.thunar-volman
-    xfce.thunar-media-tags-plugin
-
-    # Gemini client
     lagrange
-
-    # Plover
     plover.dev
 
     # Creative
