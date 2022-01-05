@@ -3,14 +3,16 @@ let
   colors = import ../colors.nix;
 in
 {
+  home.packages = [ (pkgs.nerdfonts.override { fonts = [ "Hack" ]; }) ];
   programs.foot = {
     enable = true;
     settings = with colors.theme; {
       main = {
         font = "Hack Nerd Font:size=10";
+        dpi-aware = "no";
       };
       cursor = {
-        color = "${lib.removePrefix "#" foreground}";
+        color = "${lib.removePrefix "#" background} ${lib.removePrefix "#" foreground}";
       };
       colors = {
         foreground = "${lib.removePrefix "#" foreground}";
