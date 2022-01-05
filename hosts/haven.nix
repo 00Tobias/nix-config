@@ -60,21 +60,6 @@
       autoScrub.enable = true;
       trim.enable = true;
     };
-    xserver = {
-      enable = true;
-      layout = "se";
-
-      displayManager.startx.enable = true;
-
-      libinput = {
-        enable = true;
-        touchpad = {
-          tapping = true;
-          scrollMethod = "twofinger";
-          naturalScrolling = true;
-        };
-      };
-    };
   };
 
   # List packages installed in system profile. To search, run:

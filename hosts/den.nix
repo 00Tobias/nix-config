@@ -58,13 +58,7 @@
       trim.enable = true;
     };
     xserver = {
-      enable = true;
-      layout = "se";
-
-      displayManager.startx.enable = true;
-
       videoDrivers = [ "nvidia" ]; # Use the unfree nvidia drivers
-
       config = ''
         Section "ServerLayout"
 
