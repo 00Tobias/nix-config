@@ -56,6 +56,7 @@
 
        :lang
        (cc +lsp)
+       (clojure +lsp)
        common-lisp
        emacs-lisp
        json
@@ -63,6 +64,7 @@
        nix
        (org +brain +dragndrop +pandoc +pretty +roam2)
        (python +lsp)
+       racket
        (rust +lsp)
        (sh +lsp)
        (zig +lsp)
