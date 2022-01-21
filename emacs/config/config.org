@@ -59,6 +59,20 @@ drew devault sim
 #+end_src
 #+begin_src emacs-lisp :tangle config.el
 (use-package! symex
+  :after (evil)
+  ;; Use symex as normal mode in lisp modes
+  :hook (((clojure-mode
+           emacs-lisp-mode
+           lisp-mode
+           racket-mode) . (lambda ()
+                            (define-key evil-visual-state-local-map (kbd "<escape>") 'symex-mode-interface) ; Is this a problem?
+                            (define-key evil-replace-state-local-map (kbd "<escape>") 'symex-mode-interface)
+                            (define-key evil-normal-state-local-map (kbd "<escape>") 'symex-mode-interface)
+                            (define-key evil-insert-state-local-map (kbd "<escape>") 'symex-mode-interface)
+                            (local-set-key (kbd "C-<escape>") 'evil-normal-state)
+                            (symex-mode))))
+  ;; I use a bar cursor in insert mode, this sets it back to a box in symex-mode
+  :init (add-hook 'symex-editing-mode-hook (lambda () (setq cursor-type 'box)))
   :config
   (symex-initialize))
 #+end_src
