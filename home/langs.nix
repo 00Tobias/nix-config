@@ -9,6 +9,7 @@
     # Clojure
     clojure
     clojure-lsp
+    zprint
 
     # Common-lisp
     sbcl
@@ -25,7 +26,10 @@
 
     # Python
     python3
-    python-language-server
+    hy
+    black
+    python-language-server # FIXME: Remove this?
+    python310Packages.python-lsp-server
 
     # Racket
     racket-minimal
