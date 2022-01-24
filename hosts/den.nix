@@ -124,19 +124,9 @@
     };
   };
 
-  # This fixes Steam's issues with the nvidia drivers on wayland :^)
-  environment.etc."egl/egl_external_platform.d/nvidia_wayland.json" = {
-    text = ''
-      {
-        "file_format_version" : "1.0.0",
-        "ICD" : {
-          "library_path" : "/run/opengl-driver/lib/libnvidia-egl-wayland.so"
-        }
-      }
-    '';
-  };
-
   environment.systemPackages = with pkgs; [
+    libratbag
+    piper
     home-manager
     nixpkgs-fmt
     nix-prefetch
