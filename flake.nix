@@ -33,6 +33,7 @@
           ./hosts/common.nix
           ./hosts/den.nix
           ./modules/xorg.nix
+          ./modules/kde.nix
           ./modules/doas.nix
           ./modules/kdeconnect.nix
           ./modules/mullvad.nix
@@ -47,30 +48,19 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
-                ./emacs/emacs.nix
+                ./home/kakoune/kakoune.nix
+                ./home/emacs/emacs.nix
                 ./neovim/neovim.nix
                 ./home/programs.nix
                 ./home/langs.nix
                 ./home/scripts.nix
                 ./home/pass.nix
-                ./home/nyxt.nix
+                ./home/firefox/firefox.nix
+                ./home/nyxt/nyxt.nix
                 ./home/qutebrowser.nix
-                ./home/discord.nix
                 ./home/spotify.nix
                 ./home/term.nix
-                ./home/gtk.nix
                 ./home/games.nix
-                ./home/kakoune/kakoune.nix
-                ./home/firefox/firefox.nix
-                ./home/wayland/sway.nix
-                ./home/wayland/waybar.nix
-                ./home/wayland/foot.nix
-                ./home/xorg/i3.nix
-                ./home/xorg/polybar.nix
-                ./home/xorg/rofi.nix
-                ./home/xorg/dunst.nix
-                ./home/xorg/picom.nix
-                ./home/xorg/kitty.nix
               ];
             };
           }
@@ -101,7 +91,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
-                ./emacs/emacs.nix
+                ./home/emacs/emacs.nix
                 ./home/programs.nix
                 ./home/langs.nix
                 ./home/scripts.nix
