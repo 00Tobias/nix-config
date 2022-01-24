@@ -5,12 +5,11 @@
       source = (pkgs.fetchFromGitHub {
         owner = "black7375";
         repo = "Firefox-Ui-Fix";
-        rev = "2c50ba45dd0953d4cd5fe1c5d693079a67588f4f";
-        sha256 = "nf08p9Edhug07wnaqZuptdrql5usOrzAwCLTDNmUuZs=";
+        rev = "23af4e43a9af9d9faa006c87d5266cf590dc953c";
+        sha256 = "eEpElBl69w8DLzF+M8q6WASUhIcEZ17UCX8RiW8h5nQ=";
       });
     };
   };
-
   programs = {
     firefox = {
       enable = true;
@@ -36,8 +35,8 @@
             "browser.search.separatePrivateDefault.ui.enabled" = false;
           };
           extraConfig = builtins.readFile (builtins.fetchurl {
-            url = "https://raw.githubusercontent.com/yokoffing/Better-Fox/41d94c01d19505f726fddbea7e431737d78b8724/user.js";
-            sha256 = "1xv55z97h3wyjlczdi1g1qih6d8rmm0lv31xs878yr8kfh6qd6m7";
+            url = "https://raw.githubusercontent.com/yokoffing/Better-Fox/14b7563f89689663d889244e413ada27f9bcaf21/user.js";
+            sha256 = "10f8p2p2frlmj3amagr2067r3mz0q0jndc85j24gba2j9mds1z6l";
           });
           userChrome = ''
             @import "lepton/userChrome.css";
@@ -69,12 +68,9 @@
         privacy-redirect
         sidebery
         sponsorblock
-        tabliss
-        tridactyl
         ublock-origin
       ];
     };
-
     browserpass = {
       enable = true;
       browsers = [ "firefox" ];
