@@ -61,8 +61,6 @@
       # Keybindings
       meow
       paredit
-      paredit-everywhere
-      avy
       ace-window
       which-key
 
@@ -73,11 +71,10 @@
       hl-todo
       rainbow-mode
       rainbow-delimiters
-      zoom
+      popper
 
       # Completion
       vertico
-      vertico-posframe
       orderless
       consult
       marginalia

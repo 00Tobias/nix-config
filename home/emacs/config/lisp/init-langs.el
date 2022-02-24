@@ -30,7 +30,7 @@
 
 ;; Enable tree-sitter
 (global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+(add-hook 'tree-sitter-after-on-hook 'tree-sitter-hl-mode)
 
 ;; Automatically start Eglot on supported modes
 (add-hook 'c-mode-hook 'eglot-ensure)
@@ -41,9 +41,12 @@
 (add-hook 'rustic-mode-hook 'eglot-ensure)
 (add-hook 'zig-mode-hook 'eglot-ensure)
 
+;; Rustic should use Eglot
+(setq rustic-lsp-client 'eglot)
+
 ;; Use Apheleia for automatically formatting buffers in prog-mode
 (require 'apheleia)
-(add-hook 'prog-mode-hook #'apheleia-mode)
+(add-hook 'prog-mode-hook 'apheleia-mode)
 
 ;; Add zprint for formatting Clojure code to Apheleia
 (push '(zprint . ("zprint"))
@@ -69,11 +72,21 @@
 (push '(zig-mode . (zigfmt))
       apheleia-mode-alist)
 
+;; Match pairs using electric-pairs-mode in non-lisp langs
+(add-hook 'c-mode-hook 'electric-pair-mode)
+(add-hook 'c++-mode-hook 'electric-pair-mode)
+(add-hook 'nix-mode-hook 'electric-pair-mode)
+(add-hook 'python-mode-hook 'electric-pair-mode)
+(add-hook 'rust-mode-hook 'electric-pair-mode)
+(add-hook 'rustic-mode-hook 'electric-pair-mode)
+(add-hook 'shell-mode-hook 'electric-pair-mode)
+(add-hook 'zig-mode-hook 'electric-pair-mode)
+
 ;; Enable rainbow-delimiters
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; Highlight trailing whitespace
-(add-hook 'prog-mode-hook (lambda () (setq-default show-trailing-whitespace t)))
+(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
 
 ;; Use spaces for indentation.
 (setq-default indent-tabs-mode nil)

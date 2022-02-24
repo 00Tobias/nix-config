@@ -96,9 +96,6 @@
 (add-hook 'racket-mode-hook 'enable-paredit-mode)
 (add-hook 'scheme-mode-hook 'enable-paredit-mode)
 
-;; And a lesser version everywhere else
-(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
-
 ;; Use which-key
 (which-key-mode)
 

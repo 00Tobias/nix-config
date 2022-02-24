@@ -2,7 +2,7 @@
 (load-theme 'kaolin-aurora t)
 
 ;; Set my default font
-(set-face-attribute 'default t :font "Hack" )
+(set-face-attribute 'default t :font "Hack")
 
 ;; Enable line-numbers
 (global-display-line-numbers-mode)
@@ -39,11 +39,33 @@
         ("BUG" error bold)
         ("XXX" font-lock-constant-face bold)))
 
-;; Auto resize windows using zoom
-(setq zoom-size '(0.618 . 0.618))
-(zoom-mode t)
-
 ;; Add elements to modeline
 (column-number-mode)
+
+;; Enable popper-mode
+(setq popper-reference-buffers
+      '("\\*Messages\\*"
+        "\\*scratch\\*"
+        "\\*xref\\*"
+        "Output\\*$"
+        "\\*Async Shell Command\\*"
+        help-mode
+        compilation-mode
+
+        ;; Shell modes
+        "^\\*eshell.*\\*$" eshell-mode
+        "^\\*shell.*\\*$"  shell-mode
+        "^\\*term.*\\*$"   term-mode
+        "^\\*vterm.*\\*$"  vterm-mode))
+
+;; Set keybindings
+(global-set-key (kbd "C-'") 'popper-toggle-latest)
+(global-set-key (kbd "M-'") 'popper-cycle)
+(global-set-key (kbd "C-M-'") 'popper-toggle-type)
+
+(popper-mode +1)
+
+;; Enable echo-area hints for popper
+(popper-echo-mode +1)
 
 (provide 'init-ui)

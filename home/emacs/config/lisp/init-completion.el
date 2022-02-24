@@ -4,9 +4,6 @@
 ;; richer annotations with marginalia
 (marginalia-mode)
 
-;; Show vertico in a posframe
-(vertico-posframe-mode 1)
-
 ;; Use corfu for a small in-buffer completion popup
 (setq corfu-auto t)
 (corfu-global-mode)
