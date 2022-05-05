@@ -13,7 +13,6 @@
   boot = {
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
-    supportedFilesystems = [ "zfs" ];
   };
 
   # Set your time zone.
@@ -30,7 +29,6 @@
     };
 
     hostName = "haven";
-    hostId = "27cefd8d"; # Required by ZFS
   };
 
   # Select internationalisation properties.
@@ -44,7 +42,7 @@
     users.toxic = {
       isNormalUser = true;
       shell = pkgs.zsh;
-      extraGroups = [ "wheel" "kvm" ];
+      extraGroups = [ "wheel" "kvm" "uucp" "dialout" "plugdev" ];
     };
     # patorjk.com/software/taag/#p=display&f=Standard&t=haven
     # https://ascii.co.uk/art/dragon
@@ -57,18 +55,7 @@
     '';
   };
 
-  services = {
-    zfs = {
-      autoScrub.enable = true;
-      trim.enable = true;
-    };
-  };
+  # services = { };
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    # home-manager
-    nixpkgs-fmt
-    nix-prefetch
-  ];
+  # environment.systemPackages = with pkgs; [ ];
 }
