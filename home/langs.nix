@@ -14,25 +14,10 @@
     # Common-lisp
     sbcl
 
-    # Lua
-    luajit
-    sumneko-lua-language-server
-    luaformatter
-    fennel
-
     # Nix
     rnix-lsp
     nixpkgs-fmt
-
-    # Python
-    python3
-    hy
-    black
-    python-language-server # FIXME: Remove this?
-    python310Packages.python-lsp-server
-
-    # Racket
-    racket-minimal
+    nix-prefetch
 
     # Rust
     rust-analyzer
