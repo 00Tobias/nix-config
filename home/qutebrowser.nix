@@ -3,17 +3,36 @@ let
   colors = import ./colors.nix;
 in
 {
+  # Userscripts
+  xdg.dataFile = {
+    "qutebrowser/greasemonkey/ffz_injector.user.js".source = pkgs.fetchurl {
+      url = "https://cdn.frankerfacez.com/static/ffz_injector.user.js";
+      sha256 = "0vl038x7mm98ghrirr5zcdv24zmhfaj7mrygcm07qs6dri99yjsl";
+    };
+  };
   programs.qutebrowser = {
     enable = true;
     loadAutoconfig = true; # For notification prompts
+    searchEngines = {
+      DEFAULT = "https://kagi.com/search?q={}";
+      d = "https://duckduckgo.com/?q={}";
+      g = "https://www.google.com/search?hl=en&q={}";
+    };
     settings = {
-      auto_save.session = true;
+      auto_save.session = false;
       session.lazy_restore = true;
-      qt.args = [ "enable-gpu-rasterization" "enable-accelerated-video-decode" ];
+      qt.args = [ "ignore-gpu-blocklist" "enable-gpu-rasterization" "enable-accelerated-video-decode" ];
+
+      url.start_pages = "https://kagi.com/";
 
       completion.web_history.exclude = [
+        "*://kagi.com/*"
         "*://duckduckgo.com/*"
+        "*://www.google.com/*"
         "*://twitter.com/*"
+        "*://twitch.com/videos/*"
+        "*://discord.com/*"
+        "*://piped.kavin.rocks/*"
         "*://*.youtube.com/*"
         "*://*.reddit.com/r/*"
       ];
@@ -42,18 +61,19 @@ in
         title.format = "{audio}{current_title} {private}"; # {index}:
         background = true;
         show = "multiple";
-        position = "right";
+        position = "top";
       };
 
       downloads.position = "bottom";
 
-      fonts.default_family = "Hack Nerd Font";
+      fonts.default_family = "Hack";
 
       colors = with colors.theme; {
         webpage.preferred_color_scheme = "dark";
+        # webpage.darkmode.enabled = true;
 
         completion = {
-          fg = "${lighterGrey}";
+          fg = "${foreground}";
           odd.bg = "${background}";
           even.bg = "${background}";
           category = {
@@ -63,7 +83,7 @@ in
             border.bottom = "${background}";
           };
           item.selected = {
-            fg = "${lighterGrey}";
+            fg = "${foreground}";
             bg = "${darkGrey}";
             border.top = "${darkGrey}";
             border.bottom = "${darkGrey}";
@@ -107,13 +127,13 @@ in
         messages = {
           error.fg = "${background}";
           error.bg = "${red}";
-          error.border = "${red}";
+          # error.border = "${red}";
           warning.fg = "${background}";
           warning.bg = "${magenta}";
-          warning.border = "${magenta}";
+          # warning.border = "${magenta}";
           info.fg = "${lighterGrey}";
           info.bg = "${background}";
-          info.border = "${background}";
+          # info.border = "${background}";
         };
 
         prompts = {
@@ -178,8 +198,6 @@ in
             even.bg = "${darkGrey}";
           };
         };
-
-        webpage.bg = "${background}";
       };
     };
     keyBindings = {
