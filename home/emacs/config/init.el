@@ -22,7 +22,7 @@
 ;; Lastly, load files in ./lisp
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-ui)
-(require 'init-keybindings)
+(require 'init-modal)
 (require 'init-completion)
-(require 'init-langs)
+(require 'init-prog)
 (require 'init-org)

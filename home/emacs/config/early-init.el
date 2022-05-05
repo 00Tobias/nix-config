@@ -12,9 +12,4 @@
 ;; Prevent resizing the initial frame
 (setq inhibit-startup-screen t)
 
-;; auto-compile settings
-(require 'auto-compile)
-(auto-compile-on-load-mode)
-(auto-compile-on-save-mode)
-
 ;;; early-init.el ends here

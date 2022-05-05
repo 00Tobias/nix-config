@@ -12,14 +12,14 @@
       ".emacs.d/lisp/init-ui.el" = {
         source = ./config/lisp/init-ui.el;
       };
-      ".emacs.d/lisp/init-keybindings.el" = {
-        source = ./config/lisp/init-keybindings.el;
+      ".emacs.d/lisp/init-modal.el" = {
+        source = ./config/lisp/init-modal.el;
       };
       ".emacs.d/lisp/init-completion.el" = {
         source = ./config/lisp/init-completion.el;
       };
-      ".emacs.d/lisp/init-langs.el" = {
-        source = ./config/lisp/init-langs.el;
+      ".emacs.d/lisp/init-prog.el" = {
+        source = ./config/lisp/init-prog.el;
       };
       ".emacs.d/lisp/init-org.el" = {
         source = ./config/lisp/init-org.el;
@@ -34,6 +34,7 @@
       (ripgrep.override { withPCRE2 = true; }) # Faster "grep"
       sqlite # org-roam
       languagetool # flymake-languagetool
+      nodePackages.prettier # Org mode and Apheleia
 
       # spell-fu
       (aspellWithDicts (ds: with ds; [
@@ -50,27 +51,36 @@
 
   programs.emacs = {
     enable = true;
-    package = pkgs.emacsPgtkGcc;
+    package = pkgs.emacsPgtkNativeComp;
     extraPackages = epkgs: with epkgs; [
-      # Tools
-      auto-compile
+      # Tools / Media
       vterm
       magit
       elpher
+      emms
 
-      # Keybindings
-      meow
+      # Keys / Modal
+      ryo-modal
+      selected
       paredit
-      ace-window
+      block-nav
+      avy
+      mwim
+      multiple-cursors
+      expand-region
+      crux
+      embrace
       which-key
 
       # UI
       kaolin-themes
       moody
-      diff-hl
+      git-gutter-fringe
       hl-todo
       rainbow-mode
       rainbow-delimiters
+      frames-only-mode
+      ace-window
       popper
 
       # Completion
@@ -81,45 +91,53 @@
       corfu
       kind-icon
 
-      # Org
+      # Org / Text
       spell-fu
+      hyperbole
       ox-gemini
       org-roam
       org-roam-ui
       htmlize
       ox-reveal
 
+      # Eshell
+      eshell-syntax-highlighting
+      eshell-fixed-prompt
+      esh-autosuggest
+      eshell-up
+      eshell-autojump
+
       # Programming
-      # tree-sitter
-      # tree-sitter-indent
-      flymake-languagetool
-      flymake-racket
-      flymake-kondor
       eglot
       apheleia
       yasnippet
       yasnippet-snippets
       auto-yasnippet
       dumb-jump
+      aggressive-indent
 
       # Clojure
       clojure-mode
-      clj-refactor
       cider
 
       # Common-lisp
       sly
 
+      # Elixir
+      elixir-mode
+      mix
+
       # Lua
       fennel-mode
 
-      # Racket
-      racket-mode
-      geiser
-
       # Rust
       rustic
-      racer
+
+      # Scheme
+      geiser
+      geiser-guile
+      geiser-racket
+      racket-mode
 
       # Nix
       nix-mode
