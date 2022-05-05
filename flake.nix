@@ -7,7 +7,6 @@
     home-manager.url = "github:nix-community/home-manager";
     cachix.url = "github:cachix/cachix";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
   };
 
   outputs = { self, home-manager, nixpkgs, ... } @ inputs: {
@@ -34,14 +33,13 @@
           ./hosts/den.nix
           ./modules/xorg.nix
           ./modules/kde.nix
-          ./modules/doas.nix
           ./modules/kdeconnect.nix
           ./modules/mullvad.nix
+          ./modules/mc-server.nix # NOTE: Don't commit
           ./modules/nextdns.nix
           ./modules/pipewire.nix
           ./modules/syncthing.nix
-          ./modules/yubikey.nix
-          ./modules/unfree.nix
+          ./modules/steam.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -49,18 +47,26 @@
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
                 ./home/kakoune/kakoune.nix
+                ./home/vscodium.nix
                 ./home/emacs/emacs.nix
-                ./neovim/neovim.nix
-                ./home/programs.nix
-                ./home/langs.nix
-                ./home/scripts.nix
-                ./home/pass.nix
                 ./home/firefox/firefox.nix
                 ./home/nyxt/nyxt.nix
+
+                # Wayland compositor
+                # ./home/wayland/sway.nix
+                # ./home/wayland/waybar.nix
+                # ./home/wayland/foot.nix
+                # ./home/xorg/dunst.nix
+
                 ./home/qutebrowser.nix
-                ./home/spotify.nix
-                ./home/term.nix
+                ./home/chromium.nix
+                ./home/plover.nix
+                ./home/programs.nix
+                ./home/langs.nix
                 ./home/games.nix
+                ./home/spotify.nix
+                ./home/discord.nix
+                ./home/term.nix
               ];
             };
           }
@@ -68,7 +74,6 @@
             nixpkgs.overlays = [
               inputs.nur.overlay
               inputs.emacs-overlay.overlay
-              inputs.neovim-nightly-overlay.overlay
             ];
           }
         ];
@@ -79,12 +84,10 @@
           ./hosts/common.nix
           ./hosts/haven.nix
           ./modules/wayland.nix
-          ./modules/doas.nix
           ./modules/mullvad.nix
           ./modules/nextdns.nix
           ./modules/pipewire.nix
           ./modules/syncthing.nix
-          ./modules/yubikey.nix
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
@@ -92,19 +95,15 @@
             home-manager.users.toxic = { pkgs, ... }: {
               imports = [
                 ./home/emacs/emacs.nix
-                ./home/programs.nix
-                ./home/langs.nix
-                ./home/scripts.nix
-                ./home/term.nix
-                ./home/gtk.nix
-                ./home/nyxt/nyxt.nix
-                ./home/pass.nix
-                ./home/kakoune/kakoune.nix
-                ./home/firefox/firefox.nix
+                ./home/qutebrowser.nix
                 ./home/wayland/sway.nix
                 ./home/wayland/waybar.nix
                 ./home/wayland/foot.nix
                 ./home/xorg/dunst.nix
+                ./home/langs.nix
+                ./home/scripts.nix
+                ./home/term.nix
+                ./home/gtk.nix
               ];
             };
           }
@@ -112,7 +111,6 @@
             nixpkgs.overlays = [
               inputs.nur.overlay
               inputs.emacs-overlay.overlay
-              inputs.neovim-nightly-overlay.overlay
             ];
           }
         ];
