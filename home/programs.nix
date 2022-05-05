@@ -6,10 +6,11 @@
 
   home.packages = with pkgs; [
     lagrange
-    plover.dev
 
     # Creative
     krita-beta
     kdenlive
+    aseprite
+    zrythm
   ];
 }
