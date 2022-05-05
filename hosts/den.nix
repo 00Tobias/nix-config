@@ -15,7 +15,7 @@
     loader.systemd-boot.enable = true;
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
-    kernelParams = [ "nvidia-drm.modeset=1" ];
+    kernelPackages = pkgs.linuxKernel.packages.linux_xanmod;
   };
 
   # Set your time zone.
@@ -39,7 +39,7 @@
     users.toxic = {
       isNormalUser = true;
       shell = pkgs.zsh;
-      extraGroups = [ "wheel" "kvm" ];
+      extraGroups = [ "wheel" "kvm" "uucp" "dialout" "plugdev" "adbusers" ];
     };
     # patorjk.com/software/taag/#p=display&f=Standard&t=den
     # https://ascii.co.uk/art/dragon
@@ -52,7 +52,11 @@
     '';
   };
 
+  hardware.nvidia.modesetting.enable = true;
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+
   services = {
+    udev.packages = [ pkgs.qmk-udev-rules ];
     zfs = {
       autoScrub.enable = true;
       trim.enable = true;
@@ -124,11 +128,17 @@
     };
   };
 
+  # Android bridge stuff
+  programs.adb.enable = true;
+
   environment.systemPackages = with pkgs; [
+    easyeffects
     libratbag
     piper
-    home-manager
-    nixpkgs-fmt
-    nix-prefetch
+
+    # Nvidia stuff
+    glxinfo
+    vulkan-tools
+    glmark2
   ];
 }
