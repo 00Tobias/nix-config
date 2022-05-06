@@ -25,4 +25,4 @@
 (require 'init-modal)
 (require 'init-completion)
 (require 'init-prog)
-(require 'init-org)
+(require 'init-text)

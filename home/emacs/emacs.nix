@@ -21,8 +21,8 @@
       ".emacs.d/lisp/init-prog.el" = {
         source = ./config/lisp/init-prog.el;
       };
-      ".emacs.d/lisp/init-org.el" = {
-        source = ./config/lisp/init-org.el;
+      ".emacs.d/lisp/init-text.el" = {
+        source = ./config/lisp/init-text.el;
       };
     };
 

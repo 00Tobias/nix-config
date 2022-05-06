@@ -1,7 +1,5 @@
-;; TODO: Rename this file to init-text or something?
-
-;; Enable spell-fu in org-mode
-(add-hook 'org-mode-hook
+;; Enable spell-fu in text-mode
+(add-hook 'text-mode-hook
           (lambda ()
             (setq spell-fu-faces-exclude
                   '(org-block-begin-line
@@ -21,15 +19,11 @@
             (spell-fu-mode)))
 
 ;; Automatically wrap lines at 80 columns in text modes
-(add-hook 'org-mode-hook (lambda nil
-                           (auto-fill-mode 1)
-                           (set-fill-column 80)))
-(add-hook 'markdown-mode-hook (lambda nil
-                                (auto-fill-mode 1)
-                                (set-fill-column 80)))
-
+(add-hook 'text-mode-hook (lambda nil
+                            (auto-fill-mode 1)
+                            (set-fill-column 80)))
 
 ;; Use a CDN for reveal.js for org-reveal
 (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
 
-(provide 'init-org)
+(provide 'init-text)
