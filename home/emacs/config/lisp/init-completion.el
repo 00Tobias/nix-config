@@ -6,7 +6,7 @@
 
 ;; Use corfu for a small in-buffer completion popup
 (setq corfu-auto t)
-(corfu-global-mode)
+(global-corfu-mode)
 
 ;; Kind-icon for icons in corfu
 (require 'kind-icon) ;; :/
