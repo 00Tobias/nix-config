@@ -3,7 +3,6 @@ let
   colors = import ../colors.nix;
 in
 {
-
   home.packages = with pkgs; [
     # SDL2 # Useful if you're overriding Steam's SDL, which itself hasn't proved very useful
     glib # I am peeved that gtk doesn't respect my config file on wayland >:(
@@ -25,6 +24,17 @@ in
 
     imv # Wayland feh alternative
   ];
+
+  # Use Wayland native rofi when using Sway
+  programs.rofi = {
+    package = pkgs.rofi-wayland;
+    # rofi-wayland does not support the 'window' modi, therefore we need to override extraConfig
+    extraConfig = {
+      modi = "combi,drun,run";
+      combi-modi = "drun,run";
+      show-icons = true;
+    };
+  };
 
   wayland = {
     windowManager.sway = {
@@ -55,8 +65,7 @@ in
         };
         modifier = "Mod4";
         focus.mouseWarping = false;
-        # The 'bash -c' is kinda strange, but that's how it is
-        menu = ''${pkgs.foot}/bin/foot -T "floating-terminal" bash -c '${pkgs.j4-dmenu-desktop}/bin/j4-dmenu-desktop --dmenu="${pkgs.fzf}/bin/fzf" --term="foot" --no-exec | ${pkgs.findutils}/bin/xargs swaymsg exec --' '';
+        menu = "rofi -show combi";
         terminal = "foot";
 
         defaultWorkspace = "workspace number 1";
