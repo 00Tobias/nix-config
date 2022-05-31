@@ -15,7 +15,8 @@ in
       enable = true;
       stores = [ "${config.xdg.dataHome}/password-store" ];
     };
-    extraConfig = {
+    # mkDefault so it can be changed in sway.nix
+    extraConfig = pkgs.lib.mkDefault {
       modi = "combi,window,drun,run";
       combi-modi = "window,drun,run";
       show-icons = true;
