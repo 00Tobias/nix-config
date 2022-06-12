@@ -3,6 +3,7 @@ let
   colors = import ../colors.nix;
 in
 {
+  home.packages = [ pkgs.cozette ];
   services.dunst = {
     enable = true;
     iconTheme = {
@@ -12,7 +13,9 @@ in
     settings = with colors.theme; {
       global = {
         follow = "keyboard";
-        geometry = "300x5-20+44";
+        # geometry = "300x5-20+44";
+        # width = "(0, 300)";
+
 
         progress_bar = true;
         indicate_hidden = true;
@@ -25,7 +28,7 @@ in
         frame_width = 2;
         sort = true;
 
-        font = "Hack";
+        font = "cozette"; # TODO: global font config in theme.nix
         word_wrap = true;
         markup = "full";
 
