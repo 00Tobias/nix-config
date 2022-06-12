@@ -51,7 +51,7 @@ with colors.theme; ''
   face global MenuInfo "rgb:${lib.removePrefix "#" green}"
   face global Information "rgb:${lib.removePrefix "#" foreground},rgb:${lib.removePrefix "#" lighterBlack}"
   face global Error "rgb:${lib.removePrefix "#" red}"
-  face global StatusLine "rgb:${lib.removePrefix "#" foreground},rgb:${lib.removePrefix "#" lighterBlack}"
+  face global StatusLine "rgb:${lib.removePrefix "#" foreground},rgb:${lib.removePrefix "#" background}"
   face global StatusLineMode "rgb:${lib.removePrefix "#" orange}"
   face global StatusLineInfo "rgb:${lib.removePrefix "#" blue}"
   face global StatusLineValue "rgb:${lib.removePrefix "#" foreground}"
@@ -104,6 +104,6 @@ with colors.theme; ''
   # phantom.kak
   face global Phantom "default,rgba:${lib.removePrefix "#" magenta}%opt{selectionalpha}"
 
-  # kak-rainbower
-  try %{ set global rainbow_colors "rgb:ffd700" "rgb:da70d6" "rgb:87cefa" }
+  # kak-rainbow
+  set-option global rainbow_colors rgb:${lib.removePrefix "#" foreground} rgb:${lib.removePrefix "#" red} rgb:${lib.removePrefix "#" orange} rgb:${lib.removePrefix "#" yellow} rgb:${lib.removePrefix "#" green} rgb:${lib.removePrefix "#" cyan} rgb:${lib.removePrefix "#" blue} rgb:${lib.removePrefix "#" magenta}
 ''
