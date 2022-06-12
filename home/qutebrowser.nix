@@ -3,25 +3,72 @@ let
   colors = import ./colors.nix;
 in
 {
+  home.packages = with pkgs; [
+    cozette
+
+    # For qute-bitwarden
+    bitwarden-cli
+    keyutils
+    python3Packages.tldextract
+  ];
+  # Discord desktop entry using QB
+  xdg.desktopEntries = {
+    discordQB = {
+      name = "Discord (QB)";
+      icon = "discord";
+      exec = "qutebrowser --target window -- https://discord.com/app";
+    };
+  };
   # Userscripts
   xdg.dataFile = {
+    # FrankerfaceZ for Twitch
     "qutebrowser/greasemonkey/ffz_injector.user.js".source = pkgs.fetchurl {
       url = "https://cdn.frankerfacez.com/static/ffz_injector.user.js";
       sha256 = "0vl038x7mm98ghrirr5zcdv24zmhfaj7mrygcm07qs6dri99yjsl";
+    };
+    # Screensharing with audio for Discord
+    "qutebrowser/greasemonkey/screenshare_with_audio.user.js".source = pkgs.fetchurl {
+      url = "https://openuserjs.org/install/samantas5855/Screenshare_with_Audio.min.user.js";
+      sha256 = "1hg01mahf12llr5nn4klsaa35fgc7j4czf31nb0ph0567ags7xqj";
     };
   };
   programs.qutebrowser = {
     enable = true;
     loadAutoconfig = true; # For notification prompts
-    searchEngines = {
-      DEFAULT = "https://kagi.com/search?q={}";
-      d = "https://duckduckgo.com/?q={}";
-      g = "https://www.google.com/search?hl=en&q={}";
+    searchEngines.DEFAULT = "https://kagi.com/search?q={}";
+    keyBindings = {
+      normal = {
+        "gk" = "scroll-to-perc 0";
+        "gj" = "scroll-to-perc 100";
+        "e" = "config-cycle statusbar.show always never";
+        "E" = "config-cycle tabs.position right top";
+        "z" = "spawn --userscript qute-bitwarden";
+        "+" = "zoom-in";
+        "-" = "zoom-out";
+      };
+      insert = {
+        "<Ctrl-E>" = "open-editor";
+      };
     };
+    extraConfig = ''
+      c.statusbar.padding = {
+        "bottom": 8,
+        "left": 2,
+        "right": 2,
+        "top": 8
+      }
+
+      c.tabs.padding = {
+        "bottom": 8,
+        "left": 5,
+        "right": 5,
+        "top": 8
+      }
+    '';
     settings = {
       auto_save.session = false;
       session.lazy_restore = true;
-      qt.args = [ "ignore-gpu-blocklist" "enable-gpu-rasterization" "enable-accelerated-video-decode" ];
+      qt.args = [ "ignore-gpu-blocklist" "enable-gpu-rasterization" "enable-accelerated-video-decode" "enable-features=WebRTCPipeWireCapturer" ];
 
       url.start_pages = "https://kagi.com/";
 
@@ -37,6 +84,7 @@ in
         "*://*.reddit.com/r/*"
       ];
 
+      content.autoplay = false;
       content.blocking = {
         enabled = true;
         method = "adblock";
@@ -64,13 +112,23 @@ in
         position = "top";
       };
 
+      statusbar = {
+        show = "never";
+        position = "top";
+      };
+
       downloads.position = "bottom";
 
-      fonts.default_family = "Hack";
+      fonts.default_family = "cozette";
 
       colors = with colors.theme; {
-        webpage.preferred_color_scheme = "dark";
-        # webpage.darkmode.enabled = true;
+        # Dark theme
+        webpage = {
+          preferred_color_scheme = "dark";
+          darkmode.enabled = true;
+          darkmode.policy.images = "never";
+          bg = "${background}";
+        };
 
         completion = {
           fg = "${foreground}";
@@ -200,32 +258,5 @@ in
         };
       };
     };
-    keyBindings = {
-      normal = {
-        "gk" = "scroll-to-perc 0";
-        "gj" = "scroll-to-perc 100";
-        "<Ctrl-z>" = "config-cycle tabs.position right top";
-        "+" = "zoom-in";
-        "-" = "zoom-out";
-      };
-      insert = {
-        "<Ctrl-E>" = "open-editor";
-      };
-    };
-    extraConfig = ''
-      c.statusbar.padding = {
-        "bottom": 2,
-        "left": 1,
-        "right": 1,
-        "top": 2
-      }
-
-      c.tabs.padding = {
-        "bottom": 2,
-        "left": 5,
-        "right": 5,
-        "top": 2
-      }
-    '';
   };
 }
