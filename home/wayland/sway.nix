@@ -6,23 +6,8 @@ in
   home.packages = with pkgs; [
     # SDL2 # Useful if you're overriding Steam's SDL, which itself hasn't proved very useful
     glib # I am peeved that gtk doesn't respect my config file on wayland >:(
-    capitaine-cursors # Cursor theme
-
-    # DIY Wayland dmenu
-    j4-dmenu-desktop
-    fzf
-
-    # Sway
     wl-clipboard
-    sway-contrib.grimshot
-    swaylock-fancy
-    autotiling
-
-    # For media keys
-    pulsemixer
-    playerctl
-
-    imv # Wayland feh alternative
+    imv
   ];
 
   # Use Wayland native rofi when using Sway
@@ -52,21 +37,18 @@ in
           };
         };
         output = {
-          HDMI-A-2 = { transform = "90"; };
+          HDMI-A-2 = { transform = "90"; position = "0 0"; };
         };
         seat = {
           "*" = {
             hide_cursor = "8000";
-            xcursor_theme = "capitaine-cursors";
+            xcursor_theme = "${pkgs.capitaine-cursors}/share/icons/capitaine-cursors-white";
           };
-          # "seat0" = {
-          #   xcursor_theme = "capitaine-cursors";
-          # };
         };
         modifier = "Mod4";
         focus.mouseWarping = false;
-        menu = "rofi -show combi";
-        terminal = "foot";
+        menu = "${pkgs.rofi-wayland}/bin/rofi -show combi";
+        terminal = "${pkgs.foot}/bin/foot";
 
         defaultWorkspace = "workspace number 1";
         assigns = {
@@ -182,16 +164,16 @@ in
             "${modifier}+space" = "exec ${menu}";
 
             # Media keys
-            "XF86AudioRaiseVolume" = "exec pulsemixer --change-volume +1";
-            "XF86AudioLowerVolume" = "exec pulsemixer --change-volume -1";
-            "XF86AudioMute" = "exec pulsemixer --toggle-mute";
-            "XF86AudioPlay" = "exec playerctl play-pause";
-            "XF86AudioNext" = "exec playerctl next";
-            "XF86AudioPrev" = "exec playerctl prev";
+            "XF86AudioRaiseVolume" = "exec ${pkgs.pulsemixer}/bin/pulsemixer --change-volume +1";
+            "XF86AudioLowerVolume" = "exec ${pkgs.pulsemixer}/bin/pulsemixer --change-volume -1";
+            "XF86AudioMute" = "exec ${pkgs.pulsemixer}/bin/pulsemixer --toggle-mute";
+            "XF86AudioPlay" = "exec ${pkgs.playerctl}/bin/playerctl play-pause";
+            "XF86AudioNext" = "exec ${pkgs.playerctl}/bin/playerctl next";
+            "XF86AudioPrev" = "exec ${pkgs.playerctl}/bin/playerctl prev";
 
-            "${modifier}+p" = "exec grimshot copy area";
+            "${modifier}+p" = "exec ${pkgs.sway-contrib.grimshot}/bin/grimshot copy area";
             # "${modifier}+Shift+q" = "exec swaylock -c ${lib.removePrefix "#" background}";
-            "${modifier}+Shift+q" = "exec swaylock-fancy";
+            "${modifier}+Shift+q" = "exec ${pkgs.swaylock-fancy}/bin/swaylock-fancy";
 
             "${modifier}+Shift+c" = "reload";
             "${modifier}+Shift+r" = "restart";
@@ -199,8 +181,26 @@ in
           };
         startup = [
           { command = "systemctl --user restart waybar"; always = true; }
-          { command = "autotiling"; always = true; }
-          { command = "${config.home.homeDirectory}/scripts/setwal.sh"; always = true; }
+          { command = "${pkgs.autotiling}"; always = true; }
+          {
+            command = "${pkgs.writeShellScript "setwal" ''
+              mkdir -p /tmp/wallpaper
+              ${pkgs.swaybg} -i /tmp/wallpaper/* -m fill
+              rm -f /tmp/wallpaper/*
+
+              image=$(${pkgs.curl}/bin/curl -s -H "User-Agent: cli:bash:v0.0.0" \
+                https://www.reddit.com/r/wallpapers/top/.json?t=week \
+                | ${pkgs.jq}/bin/jq '.data.children[].data.url' \
+                | sed '/.jpeg\|.jpg\|.png\|.webp/!d' \
+                | head -1 \
+                | tr -d \")
+
+              ${pkgs.curl}/bin/curl -s --output-dir /tmp/wallpaper/ -O $image
+
+              ${pkgs.swaybg}/bin/swaybg -i /tmp/wallpaper/* -m fill
+            ''}";
+            always = true;
+          }
           {
             # This is stupid
             command = "${pkgs.writeShellScript "gtk-config-import" ''
