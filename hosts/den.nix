@@ -16,6 +16,7 @@
     loader.efi.canTouchEfiVariables = true;
     supportedFilesystems = [ "zfs" ];
     kernelPackages = pkgs.linuxKernel.packages.linux_xanmod;
+    # kernelPackages = pkgs.linuxKernel.packages.linux_xanmod_latest;
   };
 
   # Set your time zone.
@@ -38,8 +39,8 @@
   users = {
     users.toxic = {
       isNormalUser = true;
-      shell = pkgs.zsh;
-      extraGroups = [ "wheel" "kvm" "uucp" "dialout" "plugdev" "adbusers" ];
+      shell = pkgs.fish;
+      extraGroups = [ "wheel" "kvm" "uucp" "dialout" "plugdev" ];
     };
     # patorjk.com/software/taag/#p=display&f=Standard&t=den
     # https://ascii.co.uk/art/dragon
@@ -53,9 +54,10 @@
   };
 
   hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
+  # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.beta;
 
   services = {
+    getty.autologinUser = "toxic"; # This is a single-user stationary host
     udev.packages = [ pkgs.qmk-udev-rules ];
     zfs = {
       autoScrub.enable = true;
@@ -127,9 +129,6 @@
       '';
     };
   };
-
-  # Android bridge stuff
-  programs.adb.enable = true;
 
   environment.systemPackages = with pkgs; [
     easyeffects
