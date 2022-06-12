@@ -4,45 +4,40 @@
       PAGER = "bat";
     };
     packages = with pkgs; [
+      # Nix utils
       update-nix-fetchgit
-      bombadillo
-      fd
+      nix-index
+      nix-alien
+      
+      # File manager
       ranger
+      ueberzug
+
+      # Apps
+      bombadillo
       neofetch
-      pulsemixer
-      unzip
       bitwarden-cli
     ];
   };
   programs = {
-    zsh = {
+    fish = {
       enable = true;
-      defaultKeymap = "emacs";
-      enableAutosuggestions = true;
-      enableCompletion = true;
-      enableSyntaxHighlighting = true;
-      enableVteIntegration = true;
-    };
+      shellInit = ''
+        set -U fish_greeting
 
-    # nushell = {
-    #   enable = true;
-    #   settings = {
-    #     completion_type = "circular";
-    #     ctrlc_exit = false;
-    #     edit_mode = "emacs";
-    #     prompt = "STARSHIP_SHELL= starship prompt";
-    #     rm_always_trash = true;
-    #     skip_welcome_message = true;
-    #     table_mode = "rounded";
-    #   };
-    # };
+        function fish_prompt
+          printf '%s@%s %s%s%s λ ' $USER $hostname \
+              (set_color $fish_color_cwd) (prompt_pwd) (set_color normal)
+        end
+      '';
+    };
 
     fzf = {
       enable = true;
-      enableZshIntegration = true;
-      defaultCommand = "fd --type f";
-      changeDirWidgetCommand = "fd --type d";
-      fileWidgetCommand = "fd --type f";
+      enableFishIntegration = true;
+      defaultCommand = "${pkgs.fd}/bin/fd --type f";
+      changeDirWidgetCommand = "${pkgs.fd}/bin/fd --type d";
+      fileWidgetCommand = "${pkgs.fd}/bin/fd --type f";
     };
 
     git = {
@@ -53,28 +48,18 @@
       extraConfig = { credential = { helper = "store"; }; };
     };
 
-    starship = {
-      enable = true;
-      enableZshIntegration = true;
-    };
-
     zoxide = {
       enable = true;
-      enableZshIntegration = true;
-    };
-
-    lsd = {
-      enable = true;
-      enableAliases = true;
+      enableFishIntegration = true;
     };
 
     bat.enable = true;
-    jq.enable = true;
 
     htop = {
       enable = true;
       settings = {
         vim_mode = true;
+        tree_view = true;
       };
     };
   };
@@ -86,7 +71,7 @@
       text = ''
         set draw_borders both
         set preview_images true
-        set preview_images_method kitty
+        set preview_images_method ueberzug
         default_linemode devicons
       '';
     };
