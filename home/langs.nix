@@ -1,23 +1,14 @@
 { config, pkgs, ... }: {
   home.packages = with pkgs; [
-    # C
-    gnumake
-    cmake
-    clang
-    clang-tools
-
     # Clojure
     clojure
     clojure-lsp
     zprint
 
-    # Common-lisp
-    sbcl
-
     # Nix
     rnix-lsp
-    nixpkgs-fmt
-    nix-prefetch
+    nixpkgs-fmt # TODO: Alejandra?
+    statix
 
     # Rust
     rust-analyzer
@@ -25,9 +16,6 @@
     clippy
     rustc
     rustfmt
-
-    # Shell
-    shellcheck
 
     # Zig
     zig
