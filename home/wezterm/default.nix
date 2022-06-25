@@ -7,7 +7,7 @@
   };
   xdg.configFile = {
     "wezterm/colors.lua" = {
-      text = import ./colors.nix { inherit lib; };
+      text = import ./colors.nix { inherit pkgs lib; };
     };
     "wezterm/wezterm.lua" = {
       source = pkgs.stdenv.mkDerivation {

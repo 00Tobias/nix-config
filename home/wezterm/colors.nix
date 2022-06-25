@@ -1,8 +1,8 @@
-{ lib }:
+{ pkgs, lib }:
 let
-  colors = import ../colors.nix;
+  theme = import ../theme.nix { inherit pkgs; };
 in
-with colors.theme; ''
+with theme.colors; ''
   foreground = "${foreground}"
   background = "${background}"
 
