@@ -1,21 +1,20 @@
 { config, pkgs, ... }:
 let
-  colors = import ../colors.nix;
+  theme = import ../theme.nix { inherit pkgs; };
 in
 {
-  home.packages = [ pkgs.cozette ];
+  # home.packages = [ pkgs.hack-font ];
   services.dunst = {
     enable = true;
     iconTheme = {
       name = "Papirus";
       package = pkgs.papirus-icon-theme;
     };
-    settings = with colors.theme; {
+    settings = with theme.colors; {
       global = {
         follow = "keyboard";
         # geometry = "300x5-20+44";
         # width = "(0, 300)";
-
 
         progress_bar = true;
         indicate_hidden = true;
@@ -28,7 +27,7 @@ in
         frame_width = 2;
         sort = true;
 
-        font = "cozette"; # TODO: global font config in theme.nix
+        font = with theme.font; "${name} ${toString size}";
         word_wrap = true;
         markup = "full";
 
