@@ -1,5 +1,5 @@
 { config, pkgs, ... }: {
-  system.stateVersion = "unstable";
+  system.stateVersion = "22.11"; # TODO: I shouldn't have to specify this
   programs.dconf.enable = true;
   nix = {
     settings = {
