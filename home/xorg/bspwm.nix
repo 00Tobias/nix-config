@@ -1,9 +1,30 @@
 { config, pkgs, ... }:
 let
-  colors = import ../colors.nix;
+  theme = import ../theme.nix { inherit pkgs; };
 in
 {
-  home.packages = with pkgs; [ xsel ];
+  home = {
+    packages = with pkgs; [ xsel feh ];
+    pointerCursor = {
+      package = pkgs.capitaine-cursors;
+      name = "capitaine-cursors-white";
+      size = 16;
+      gtk.enable = true;
+      x11 = {
+        enable = true;
+        defaultCursor = "left_ptr";
+      };
+    };
+  };
+  services.flameshot = {
+    enable = true;
+    settings = {
+      General = {
+        disabledTrayIcon = true;
+        showStartupLaunchMessage = false;
+      };
+    };
+  };
   xsession = {
     enable = true;
     scriptPath = ".hm-xsession";
@@ -20,7 +41,7 @@ in
         ${pkgs.bspwm}/bin/bspc wm --reorder-monitors DP-0 HDMI-1
         ${pkgs.xorg.xset}/bin/xset s off -dpms
       '';
-      settings = with colors.theme; {
+      settings = with theme.colors; {
         border_width = 3;
         window_gap = 10;
         focus_follows_pointer = true;
@@ -41,26 +62,22 @@ in
         "discord" = {
           desktop = "^7";
         };
-        # "*:*:Discord - qutebrowser" = {
-        #   desktop = "^7";
-        # };
         "Spotify" = {
           desktop = "^7";
         };
 
         # Any Steam window except the main one should be floating
         "*:Steam:*" = {
+          desktop = "^5";
           state = "floating";
           focus = false;
         };
         "*:Steam:Steam" = {
-          desktop = "^5";
           state = "tiled";
         };
       };
       startupPrograms = [
-        "${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr"
-        "${pkgs.picom}/bin/picom -b -c -C -G --shadow-exclude 'bounding_shaped && wmwin' --experimental-backends"
+        "${pkgs.picom}/bin/picom -b -c -C -G --shadow-exclude 'bounding_shaped && wmwin' --shadow-exclude 'class_g = 'Firefox' && (window_type = 'utility' || window_type = 'popup_menu') && argb' --experimental-backends"
         "${pkgs.unclutter}/bin/unclutter"
         "${pkgs.libsForQt5.kdeconnect-kde}/bin/kdeconnect-indicator"
         "${pkgs.writeShellScript "setwal" ''
@@ -158,13 +175,13 @@ in
       "super + ctrl + Return" = "${pkgs.emacsPgtkNativeComp}/bin/emacsclient -cne '(eshell t)'";
 
       # Program launcher
-      "super + @space" = "${pkgs.rofi}/bin/rofi -show combi";
+      "super + @space" = "${pkgs.rofi}/bin/rofi -show drun";
 
       # Audio mixer
       "super + v" = "${pkgs.alacritty}/bin/alacritty --class floating-terminal -e ${pkgs.pulsemixer}/bin/pulsemixer";
 
       # Screen locker
-      "super + shift + p" = "${pkgs.xorg.xset}/bin/xset s on +dpms && ${pkgs.betterlockscreen}/bin/betterlockscreen -l blur && ${pkgs.xorg.xset}/bin/xset s off -dpms";
+      "super + shift + p" = "${pkgs.xorg.xset}/bin/xset s on +dpms; ${pkgs.betterlockscreen}/bin/betterlockscreen -l blur; ${pkgs.xorg.xset}/bin/xset s off -dpms";
 
       # Screenshotter
       "super + p" = "${pkgs.flameshot}/bin/flameshot gui";
