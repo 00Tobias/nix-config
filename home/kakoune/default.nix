@@ -28,12 +28,12 @@ let
   };
   fzf-kak = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
     pname = "fzf-kak";
-    version = "unstable-2022-05-10";
+    version = "unstable-2022-06-17";
     src = pkgs.fetchFromGitHub {
       owner = "andreyorst";
       repo = "fzf.kak";
-      rev = "cb07538a88dd51b1c03800d6c451d2d71e7b80a5";
-      sha256 = "0qk3spn2062lvikpy3cwwinl486pa19175402bpnh27ss0xaw7x5";
+      rev = "5f5aa98e063149172d7a322ca5100f41ba57ab0a";
+      sha256 = "0c2442rhhdzgg37x3fd653ic9ljg6dgpd7ck1qhhm1322a3my6ag";
     };
   };
   kakboard = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
@@ -76,6 +76,16 @@ let
       sha256 = "0mqghysiwi1h0hx96c7bq0a16yrxh65f3v8bqqn5bh9x1zh2l9mg";
     };
   };
+  surround-kak = pkgs.kakouneUtils.buildKakounePluginFrom2Nix {
+    pname = "surround-kak";
+    version = "unstable-2021-10-27";
+    src = pkgs.fetchFromGitHub {
+      owner = "alexherbo2";
+      repo = "surround.kak";
+      rev = "f27c1626ab84ae81ae77da168df5a5ac00c84dec";
+      sha256 = "0hnjp1slw0dxpn27dq7f11824jbbaggzqvql4kmx4nqmqkwicyby";
+    };
+  };
 in
 {
   home.sessionVariables = {
@@ -101,7 +111,7 @@ in
   # Colorscheme based on my system colors
   xdg.configFile = {
     "kak/colors/colors.kak" = {
-      text = import ./colors.nix { inherit lib; };
+      text = import ./colors.nix { inherit pkgs lib; };
     };
   };
 
@@ -126,6 +136,7 @@ in
         kakoune-snippets
         kakoune-snippet-collection
         kak-rainbow
+        surround-kak
       ];
     };
   };

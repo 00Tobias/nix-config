@@ -1,10 +1,10 @@
 # based on https://github.com/raiguard/one.kak/blob/main/colors/one-dark.kak
 
-{ lib }:
+{ pkgs, lib }:
 let
-  colors = import ../colors.nix;
+  theme = import ../theme.nix { inherit pkgs; };
 in
-with colors.theme; ''
+with theme.colors; ''
   decl str cursoralpha "80"
   decl str selectionalpha "40"
 

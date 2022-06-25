@@ -32,6 +32,9 @@ map global insert <s-tab> '<a-;><a-lt>'
 # Comment out selection
 map global user c ': comment-line<ret>' -docstring 'comment'
 
+# Surround selection
+map global user s ': surround-mode<ret>' -docstring 'surround'
+
 # lazygit in a floating terminal
 map global user g ': floating-terminal lazygit<ret>' -docstring 'git'
 
