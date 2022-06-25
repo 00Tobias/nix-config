@@ -1,22 +1,13 @@
-;; Enable spell-fu in text-mode
-(add-hook 'text-mode-hook
-          (lambda ()
-            (setq spell-fu-faces-exclude
-                  '(org-block-begin-line
-                    org-block-end-line
-                    org-code
-                    org-date
-                    org-drawer org-document-info-keyword
-                    org-ellipsis
-                    org-link
-                    org-meta-line
-                    org-properties
-                    org-properties-value
-                    org-special-keyword
-                    org-src
-                    org-tag
-                    org-verbatim))
-            (spell-fu-mode)))
+;;; init-text.el --- Configuration for text modes  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
+;; Languagetool for checking writing
+(setq languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+      languagetool-console-command "languagetool-commandline"
+      languagetool-server-command "languagetool-server")
 
 ;; Automatically wrap lines at 80 columns in text modes
 (add-hook 'text-mode-hook (lambda nil
@@ -27,3 +18,4 @@
 (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
 
 (provide 'init-text)
+;;; init-text.el ends here

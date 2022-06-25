@@ -1,4 +1,8 @@
-;;; early-init.el --- early bird  -*- no-byte-compile: t -*-
+;;; early-init.el --- Early init config  -*- no-byte-compile: t; lexical-binding: t; -*-
+;;; Commentary:
+
+;;; Code:
+
 (setq load-prefer-newer t)
 
 ;; (setq package-enable-at-startup nil)

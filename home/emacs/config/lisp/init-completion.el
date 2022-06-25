@@ -1,8 +1,26 @@
+;;; init-completion.el --- Configuration for completion and minibuffer  -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
 ;; Enable vertico
 (vertico-mode)
 
+;; vertico-posframe
+(vertico-posframe-mode 1)
+
 ;; richer annotations with marginalia
 (marginalia-mode)
+
+;; Save history
+(savehist-mode)
+(setq savehist-save-minibuffer-history t
+      savehist-autosave-interval nil
+      savehist-additional-variables '(register-alist
+                                      kill-ring
+                                      mark-ring global-mark-ring
+                                      search-ring regexp-search-ring))
 
 ;; Use corfu for a small in-buffer completion popup
 (setq corfu-auto t)
@@ -22,3 +40,4 @@
 (setq tab-always-indent 'complete)
 
 (provide 'init-completion)
+;;; init-completion.el ends here
