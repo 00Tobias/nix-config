@@ -1,9 +1,9 @@
 { config, pkgs, ... }:
 let
-  colors = import ../colors.nix;
+  theme = import ../theme.nix { inherit pkgs; };
 in
 {
-  home.packages = [ pkgs.cozette ];
+  # home.packages = [ pkgs.cozette ];
   programs = {
     alacritty = {
       enable = true;
@@ -15,22 +15,22 @@ in
             y = 0;
           };
         };
-        font = {
-          # size = 12.0;
+        font = with theme.font; {
+          size = size;
           normal = {
-            family = "cozette";
+            family = "${name}";
             style = "Regular";
           };
           bold = {
-            family = "cozette";
+            family = "${name}";
             style = "Bold";
           };
           italic = {
-            family = "cozette";
+            family = "${name}";
             style = "Italic";
           };
         };
-        colors = with colors.theme; {
+        colors = with theme.colors; {
           primary = {
             background = "${background}";
             foreground = "${foreground}";
