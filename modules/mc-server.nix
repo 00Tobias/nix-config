@@ -1,11 +1,14 @@
 { config, pkgs, ... }: {
+  # For lazymc's proxy
+  networking.firewall.allowedUDPPorts = [ 25566 ];
+  networking.firewall.allowedTCPPorts = [ 25566 ];
   services.minecraft-server = {
     enable = true;
     openFirewall = true;
     package = pkgs.papermc;
     eula = true;
-    jvmOpts = "-Xmx4096M -Xms4096M";
-    declarative = true;
+    jvmOpts = "-Xmx3G -Xms3G";
+    # declarative = true;
     serverProperties = {
       enable-jmx-monitoring = false;
       enable-command-block = true;
