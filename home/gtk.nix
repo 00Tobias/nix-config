@@ -1,5 +1,4 @@
 { config, pkgs, ... }: {
-  home.packages = [ pkgs.capitaine-cursors ];
   gtk = {
     enable = true;
     theme = {
@@ -11,12 +10,13 @@
       package = pkgs.papirus-icon-theme;
     };
     font = {
-      name = "Liberation Sans";
-      size = 10;
+      name = "DejaVu Sans";
+      package = pkgs.dejavu_fonts;
+      size = 8;
     };
     gtk3.extraConfig = {
-      gtk-cursor-theme-name = "capitaine-cursors";
       gtk-decoration-layout = "menu";
+      gtk-application-prefer-dark-theme = true;
     };
   };
 }
