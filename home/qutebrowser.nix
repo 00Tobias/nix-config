@@ -1,11 +1,9 @@
 { config, pkgs, ... }:
 let
-  colors = import ./colors.nix;
+  theme = import ./theme.nix { inherit pkgs; };
 in
 {
   home.packages = with pkgs; [
-    cozette
-
     # For qute-bitwarden
     bitwarden-cli
     keyutils
@@ -119,9 +117,9 @@ in
 
       downloads.position = "bottom";
 
-      fonts.default_family = "cozette";
+      fonts.default_family = with theme.font; "${name}";
 
-      colors = with colors.theme; {
+      colors = with theme.colors; {
         # Dark theme
         webpage = {
           preferred_color_scheme = "dark";
