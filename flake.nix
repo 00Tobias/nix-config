@@ -67,12 +67,13 @@
               home-manager.useUserPackages = true;
               home-manager.sharedModules = [{ home.keyboard.layout = "se"; }];
               home-manager.users.toxic = { pkgs, ... }: {
+                home.stateVersion = "22.11";
                 imports = [
                   # Main programs
-                  ./home/kakoune/kakoune.nix
+                  ./home/kakoune
                   ./home/firefox
-                  ./home/nyxt/nyxt.nix
-                  ./home/emacs/emacs.nix
+                  ./home/nyxt
+                  ./home/emacs
                   ./home/qutebrowser.nix
 
                   # River
@@ -132,7 +133,7 @@
               home-manager.sharedModules = [{ home.keyboard.layout = "se"; }];
               home-manager.users.toxic = { pkgs, ... }: {
                 imports = [
-                  ./home/emacs/emacs.nix
+                  ./home/emacs
                   ./home/qutebrowser.nix
                   ./home/wayland/sway.nix
                   ./home/wayland/waybar.nix
