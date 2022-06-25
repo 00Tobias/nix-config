@@ -1,4 +1,8 @@
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  theme = import ../theme.nix { inherit pkgs; };
+in
+{
   home = {
     packages = [ pkgs.noto-fonts ];
     file.".mozilla/firefox/toxic/chrome/lepton" = {
@@ -9,6 +13,34 @@
         rev = "272fda96a4c17112a715c7e61a288a18cd42990e";
         sha256 = "Lto5X96MyNpTYuqlkFO1lTPixL+gqMxqtwlxzz0ruJ8=";
       };
+    };
+    file.".mozilla/firefox/toxic/chrome/sidebery.css" = {
+      text = with theme.colors; ''
+        @media (prefers-color-scheme:dark),(prefers-color-scheme: no-preference) {
+          #root[data-style="auto"],
+          #root[data-style="dark"] {
+             --bg: ${background};
+             --fg-primary: ${foreground};
+
+             --ctx-menu-bg: ${black};
+        }
+        }
+
+        @media (prefers-color-scheme:light) {
+          #root[data-style="auto"],
+          #root[data-style="light"] {
+            --fg-primary: blue;
+          }
+        }
+
+        .Tab .title {
+          color: var(--fg-primary);
+        }
+
+        .Tab[data-active="true"]  .title {
+          color: var(--fg-primary);
+        }
+      '';
     };
   };
   programs = {
