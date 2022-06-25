@@ -6,6 +6,8 @@
 
   home.packages = with pkgs; [
     lagrange
+    librewolf
+    obsidian
 
     # Creative
     krita-beta
